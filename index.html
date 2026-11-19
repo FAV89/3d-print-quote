@@ -44,8 +44,8 @@
     .layer-row {
       display: flex; gap: 8px; margin-bottom: 8px; align-items: center;
     }
-    .layer-row select { flex: 1.2; }
-    .layer-row input[type="number"] { flex: 1; }
+    .layer-row select { flex: 1.1; min-width: 0; font-size: 0.9rem; }
+    .layer-row input[type="number"] { flex: 0.9; min-width: 0; }
     .btn-remove-layer {
       background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger);
       color: #fca5a5; border-radius: 10px; padding: 10px 12px;
@@ -210,9 +210,8 @@
     <button type="button" class="btn-add-layer" id="btnAddLayer" onclick="addLayer()">
       <span>+</span> <span id="lblAddLayerText">Adaugă Culoare / Layer</span>
     </button>
-    <div style="margin-top: 8px;">
-      <label id="lblWaste">Pierdere Material / Suport / Purjare (Grame)</label>
-      <input type="number" id="wasteGrams" placeholder="0 g" step="1" min="0" oninput="calculate()" />
+    <div style="margin-top: 4px; font-size: 0.75rem; color: var(--muted);">
+      Pierdere se introduce per culoare (ultimul câmp).
     </div>
   </div>
 
@@ -419,8 +418,9 @@
 
       const isFirst = container.children.length === 0;
       row.innerHTML = `
-        <select id="colorSel_${layerCount}" onchange="calculate()">${colorOptionsHTML}</select>
-        <input type="number" id="gramsInp_${layerCount}" placeholder="0 g" step="1" min="0" value="${defaultGrams}" oninput="calculate()" />
+        <select class="color-select" onchange="calculate()">${colorOptionsHTML}</select>
+        <input class="grams-input" type="number" placeholder="g" step="1" min="0" value="${defaultGrams}" oninput="calculate()" />
+        <input class="waste-input" type="number" placeholder="pierd. g" step="1" min="0" value="" oninput="calculate()" />
         ${!isFirst ? '<button type="button" class="btn-remove-layer" onclick="removeLayer(\'' + rowId + '\')">✕</button>' : '<div style="width: 38px;"></div>'}
       `;
       container.appendChild(row);
@@ -541,18 +541,17 @@
       let totalGrams = 0;
       document.querySelectorAll(".layer-row").forEach(row => {
         const sel = row.querySelector("select");
-        const inp = row.querySelector("input");
-        const g = parseFloat(inp.value) || 0;
-        totalGrams += g;
+        const gramsInp = row.querySelector(".grams-input");
+        const wasteInp = row.querySelector(".waste-input");
+        const g = parseFloat(gramsInp.value) || 0;
+        const w = parseFloat(wasteInp.value) || 0;
+        totalGrams += g + w;
         if (g > 0) {
           const cIdx = parseInt(sel.value);
           const cName = COLORS_LIST[cIdx][config.lang];
           if (!usedColors.includes(cName)) usedColors.push(cName);
         }
       });
-
-      const waste = parseFloat(document.getElementById("wasteGrams").value) || 0;
-      totalGrams += waste;
 
       const matCost = (totalGrams / 1000) * mat.priceKg;
       const powerCost = (mat.watts / 1000) * totalHours * config.kwhPrice;
@@ -606,7 +605,7 @@
     function resetForm() {
       document.querySelectorAll(".layer-row").forEach((row, index) => {
         if (index === 0) {
-          row.querySelector("input").value = "";
+          row.querySelectorAll("input").forEach(inp => { inp.value = ""; });
         } else {
           row.remove();
         }
