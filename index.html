@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0f172a" />
-  <title>3D Print Quote</title>
+  <title>3D Print Calc</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -41,9 +41,24 @@
       color: var(--muted); margin: 0 0 10px 0; font-weight: 600;
     }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .row-color {
-      display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; margin-bottom: 8px;
+    .layer-row {
+      display: flex; gap: 8px; margin-bottom: 8px; align-items: center;
     }
+    .layer-row select { flex: 1.2; }
+    .layer-row input[type="number"] { flex: 1; }
+    .btn-remove-layer {
+      background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger);
+      color: #fca5a5; border-radius: 10px; padding: 10px 12px;
+      font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-add-layer {
+      width: 100%; padding: 9px; border-radius: 10px;
+      border: 1px dashed var(--accent); background: rgba(56, 189, 248, 0.08);
+      color: var(--accent); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; margin-top: 4px; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-add-layer:hover { background: rgba(56, 189, 248, 0.18); }
     label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
     select, input[type="number"], input[type="text"] {
       width: 100%; padding: 10px 12px; border-radius: 10px;
@@ -110,69 +125,23 @@
       background: var(--accent); color: #0f172a; font-weight: 700;
       font-size: 0.95rem; cursor: pointer; margin-top: 8px;
     }
-
     #printSheet { display: none; }
-
     @media print {
-      body {
-        background: #ffffff !important;
-        color: #111827 !important;
-        max-width: 100% !important;
-        padding: 20px !important;
-      }
-      header, #settingsPanel, .no-print {
-        display: none !important;
-      }
-      #printSheet {
-        display: block !important;
-        border: 1px solid #d1d5db;
-        border-radius: 12px;
-        padding: 24px;
-      }
-      .print-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid #111827;
-        padding-bottom: 12px;
-        margin-bottom: 20px;
-      }
-      .print-title {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: #111827;
-        margin: 0;
-      }
-      .print-date {
-        font-size: 0.9rem;
-        color: #4b5563;
-      }
-      .print-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 0;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 1.05rem;
-      }
-      .print-total {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        padding: 16px;
-        background: #f3f4f6 !important;
-        border-radius: 10px;
-        font-size: 1.35rem;
-        font-weight: 800;
-        color: #111827;
-      }
+      body { background: #ffffff !important; color: #111827 !important; max-width: 100% !important; padding: 20px !important; }
+      header, #settingsPanel, .no-print { display: none !important; }
+      #printSheet { display: block !important; border: 1px solid #d1d5db; border-radius: 12px; padding: 24px; }
+      .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #111827; padding-bottom: 12px; margin-bottom: 20px; }
+      .print-title { font-size: 1.4rem; font-weight: 800; color: #111827; margin: 0; }
+      .print-date { font-size: 0.9rem; color: #4b5563; }
+      .print-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 1.05rem; }
+      .print-total { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 16px; background: #f3f4f6 !important; border-radius: 10px; font-size: 1.35rem; font-weight: 800; color: #111827; }
     }
   </style>
 </head>
 <body>
 
   <header class="no-print">
-    <h1 id="appTitle">🖨️ 3D Print Quote</h1>
+    <h1 id="appTitle">🖨️ 3D Print Calc</h1>
     <div class="header-actions">
       <button class="btn-top" id="langBtn" onclick="toggleLang()">EN</button>
       <button class="btn-top" id="settingsBtn" onclick="toggleSettings()">⚙️ Setări</button>
@@ -195,14 +164,12 @@
       <label id="lblSetCurrency">Monedă (ex: lei, EUR, USD)</label>
       <input type="text" id="setCurrency" maxlength="6" />
     </div>
-
     <div class="settings-grid" style="color: var(--muted); font-size: 0.78rem;">
       <div id="lblColMat">Material</div>
       <div id="lblColPrice">Preț / kg</div>
       <div id="lblColWatts">Putere (W)</div>
     </div>
     <div id="materialsSettingsList"></div>
-
     <button class="btn-save" id="btnSave" onclick="saveSettings()">💾 Salvează Setările</button>
   </div>
 
@@ -210,7 +177,7 @@
     <p class="card-title" id="lblSec1">1. Material & Timp de Printare</p>
     <div class="grid-2" style="margin-bottom: 10px;">
       <div>
-        <label id="lblMat">Material</label>
+        <label id="lblMat">Material Principal</label>
         <select id="materialSelect" onchange="calculate()">
           <option value="PLA" selected>PLA</option>
           <option value="PET-G">PET-G</option>
@@ -232,29 +199,17 @@
     </div>
     <div class="info-pill">
       <span id="infoPriceKg">Preț/kg: 60 lei</span>
-      <span id="infoWatts">Consum: 100 W</span>
+      <span id="infoWatts">Consum: 1200 W</span>
       <span id="infoKwh">Curent: 1.5 lei/kWh</span>
     </div>
   </div>
 
   <div class="card no-print">
-    <p class="card-title" id="lblSec2">2. Culori & Greutate (Grame)</p>
-    <div class="row-color">
-      <select id="color1"></select>
-      <input type="number" id="grams1" placeholder="0 g" step="1" min="0" oninput="calculate()" />
-    </div>
-    <div class="row-color">
-      <select id="color2"></select>
-      <input type="number" id="grams2" placeholder="0 g" step="1" min="0" oninput="calculate()" />
-    </div>
-    <div class="row-color">
-      <select id="color3"></select>
-      <input type="number" id="grams3" placeholder="0 g" step="1" min="0" oninput="calculate()" />
-    </div>
-    <div class="row-color">
-      <select id="color4"></select>
-      <input type="number" id="grams4" placeholder="0 g" step="1" min="0" oninput="calculate()" />
-    </div>
+    <p class="card-title" id="lblSec2">2. Culori & Layere (Grame)</p>
+    <div id="layersContainer"></div>
+    <button type="button" class="btn-add-layer" id="btnAddLayer" onclick="addLayer()">
+      <span>+</span> <span id="lblAddLayerText">Adaugă Culoare / Layer</span>
+    </button>
     <div style="margin-top: 8px;">
       <label id="lblWaste">Pierdere Material / Suport / Purjare (Grame)</label>
       <input type="number" id="wasteGrams" placeholder="0 g" step="1" min="0" oninput="calculate()" />
@@ -298,12 +253,10 @@
       <span id="resTvaLabel">TVA (19%):</span>
       <span id="resTvaVal">0.00 lei</span>
     </div>
-
     <div class="total-box">
       <span class="total-label" id="lblFinalPrice">Preț de Vânzare</span>
       <span class="total-price" id="resFinalPrice">0.00 lei</span>
     </div>
-
     <div class="action-buttons">
       <button class="btn-print" id="btnPrint" onclick="printQuote()">🖨️ Print / PDF</button>
       <button class="btn-reset" id="btnReset" onclick="resetForm()">🔄 RESET</button>
@@ -320,7 +273,7 @@
       <strong id="pValMat">PLA</strong>
     </div>
     <div class="print-row" id="pRowColors">
-      <span id="pLblColors">Culori:</span>
+      <span id="pLblColors">Culori / Layere:</span>
       <span id="pValColors">-</span>
     </div>
     <div class="print-row">
@@ -339,11 +292,11 @@
 
   <script>
     const COLORS_LIST = [
+      { ro: "Gri", en: "Grey" },
       { ro: "Alb", en: "White" },
       { ro: "Negru", en: "Black" },
       { ro: "Roșu", en: "Red" },
       { ro: "Galben", en: "Yellow" },
-      { ro: "Gri", en: "Grey" },
       { ro: "Albastru", en: "Blue" },
       { ro: "Verde", en: "Green" },
       { ro: "Portocaliu", en: "Orange" },
@@ -369,10 +322,11 @@
         colWatts: "Putere (W)",
         btnSave: "💾 Salvează Setările",
         sec1: "1. Material & Timp de Printare",
-        mat: "Material",
+        mat: "Material Principal",
         hours: "Ore",
         minutes: "Minute",
-        sec2: "2. Culori & Greutate (Grame)",
+        sec2: "2. Culori & Layere (Grame)",
+        addLayerText: "Adaugă Culoare / Layer",
         waste: "Pierdere Material / Suport / Purjare (Grame)",
         sec3: "3. Opțiuni TVA",
         includeTva: "Include TVA",
@@ -383,14 +337,10 @@
         resProd: "Cost Producție:",
         resBase: "Valoare Ofertă (fără TVA):",
         finalPrice: "Preț de Vânzare",
-        tvaWord: "TVA",
-        infoPrice: "Preț/kg",
-        infoWatts: "Consum",
-        infoKwh: "Curent",
         btnPrint: "🖨️ Print / PDF",
         pTitle: "Ofertă Printare 3D",
         pLblMat: "Material:",
-        pLblColors: "Culori:",
+        pLblColors: "Culori / Layere:",
         pLblNet: "Preț (fără TVA):",
         pLblTotal: "Preț Final:"
       },
@@ -405,10 +355,11 @@
         colWatts: "Power (W)",
         btnSave: "💾 Save Settings",
         sec1: "1. Material & Print Time",
-        mat: "Material",
+        mat: "Main Material",
         hours: "Hours",
         minutes: "Minutes",
-        sec2: "2. Colors & Weight (Grams)",
+        sec2: "2. Colors & Layers (Grams)",
+        addLayerText: "Add Color / Layer",
         waste: "Material Waste / Supports / Purge (Grams)",
         sec3: "3. VAT Options",
         includeTva: "Include VAT",
@@ -419,14 +370,10 @@
         resProd: "Production Cost:",
         resBase: "Quote Value (excl. VAT):",
         finalPrice: "Selling Price",
-        tvaWord: "VAT",
-        infoPrice: "Price/kg",
-        infoWatts: "Power",
-        infoKwh: "Energy",
         btnPrint: "🖨️ Print / PDF",
         pTitle: "3D Printing Quote",
         pLblMat: "Material:",
-        pLblColors: "Colors:",
+        pLblColors: "Colors / Layers:",
         pLblNet: "Price (excl. VAT):",
         pLblTotal: "Final Price:"
       }
@@ -447,34 +394,65 @@
     };
 
     let config = JSON.parse(localStorage.getItem("calc3d_v5")) || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    let layerCount = 0;
 
     function init() {
-      populateColorSelects([4, 4, 4, 2]);
       applyLanguage();
       renderSettings();
+      addLayer();
       calculate();
     }
 
-    function populateColorSelects(selectedIndices) {
-      [1, 2, 3, 4].forEach((idx, i) => {
-        const sel = document.getElementById("color" + idx);
-        const currentVal = sel.value !== "" ? parseInt(sel.value) : (selectedIndices ? selectedIndices[i] : 4);
-        sel.innerHTML = "";
-        COLORS_LIST.forEach((c, cIdx) => {
-          const opt = document.createElement("option");
-          opt.value = cIdx;
-          opt.textContent = c[config.lang];
-          if (cIdx === currentVal) opt.selected = true;
-          sel.appendChild(opt);
-        });
+    function addLayer(defaultColorIndex = 0, defaultGrams = "") {
+      layerCount++;
+      const container = document.getElementById("layersContainer");
+      const rowId = "layerRow_" + layerCount;
+      const row = document.createElement("div");
+      row.className = "layer-row";
+      row.id = rowId;
+
+      let colorOptionsHTML = "";
+      COLORS_LIST.forEach((c, idx) => {
+        const selected = idx === defaultColorIndex ? "selected" : "";
+        colorOptionsHTML += '<option value="' + idx + '" ' + selected + '>' + c[config.lang] + '</option>';
       });
+
+      const isFirst = container.children.length === 0;
+      row.innerHTML = `
+        <select id="colorSel_${layerCount}" onchange="calculate()">${colorOptionsHTML}</select>
+        <input type="number" id="gramsInp_${layerCount}" placeholder="0 g" step="1" min="0" value="${defaultGrams}" oninput="calculate()" />
+        ${!isFirst ? '<button type="button" class="btn-remove-layer" onclick="removeLayer(\'' + rowId + '\')">✕</button>' : '<div style="width: 38px;"></div>'}
+      `;
+      container.appendChild(row);
+      calculate();
+    }
+
+    function removeLayer(rowId) {
+      const row = document.getElementById(rowId);
+      if (row) {
+        row.remove();
+        calculate();
+      }
+    }
+
+    function toggleSettings() {
+      const panel = document.getElementById("settingsPanel");
+      panel.style.display = panel.style.display === "block" ? "none" : "block";
     }
 
     function toggleLang() {
       config.lang = config.lang === "ro" ? "en" : "ro";
       localStorage.setItem("calc3d_v5", JSON.stringify(config));
-      populateColorSelects();
+      const currentLayers = Array.from(document.querySelectorAll(".layer-row")).map(row => ({
+        colorIdx: parseInt(row.querySelector("select").value),
+        grams: row.querySelector("input").value
+      }));
       applyLanguage();
+      document.querySelectorAll(".layer-row").forEach((row, index) => {
+        const sel = row.querySelector("select");
+        const selectedVal = currentLayers[index] ? currentLayers[index].colorIdx : 0;
+        sel.innerHTML = COLORS_LIST.map((c, idx) => '<option value="' + idx + '" ' + (idx === selectedVal ? 'selected' : '') + '>' + c[config.lang] + '</option>').join("");
+      });
       calculate();
     }
 
@@ -495,6 +473,7 @@
       document.getElementById("lblHours").textContent = t.hours;
       document.getElementById("lblMinutes").textContent = t.minutes;
       document.getElementById("lblSec2").textContent = t.sec2;
+      document.getElementById("lblAddLayerText").textContent = t.addLayerText;
       document.getElementById("lblWaste").textContent = t.waste;
       document.getElementById("lblSec3").textContent = t.sec3;
       document.getElementById("lblIncludeTva").textContent = t.includeTva;
@@ -531,11 +510,6 @@
       });
     }
 
-    function toggleSettings() {
-      const p = document.getElementById("settingsPanel");
-      p.style.display = p.style.display === "none" || p.style.display === "" ? "block" : "none";
-    }
-
     function saveSettings() {
       config.kwhPrice = parseFloat(document.getElementById("setKwh").value) || 1.5;
       config.defaultMarkup = parseFloat(document.getElementById("setMarkup").value) || 2;
@@ -555,9 +529,9 @@
       const matName = document.getElementById("materialSelect").value;
       const mat = config.materials[matName];
 
-      document.getElementById("infoPriceKg").textContent = `${t.infoPrice}: ${mat.priceKg} ${cur}`;
-      document.getElementById("infoWatts").textContent = `${t.infoWatts}: ${mat.watts} W`;
-      document.getElementById("infoKwh").textContent = `${t.infoKwh}: ${config.kwhPrice} ${cur}/kWh`;
+      document.getElementById("infoPriceKg").textContent = t.infoPrice + ": " + mat.priceKg + " " + cur;
+      document.getElementById("infoWatts").textContent = t.infoWatts + ": " + mat.watts + " W";
+      document.getElementById("infoKwh").textContent = t.infoKwh + ": " + config.kwhPrice + " " + cur + "/kWh";
 
       const h = parseInt(document.getElementById("printHours").value) || 0;
       const m = parseInt(document.getElementById("printMinutes").value) || 0;
@@ -565,11 +539,13 @@
 
       let usedColors = [];
       let totalGrams = 0;
-      [1, 2, 3, 4].forEach(idx => {
-        const g = parseFloat(document.getElementById("grams" + idx).value) || 0;
+      document.querySelectorAll(".layer-row").forEach(row => {
+        const sel = row.querySelector("select");
+        const inp = row.querySelector("input");
+        const g = parseFloat(inp.value) || 0;
         totalGrams += g;
         if (g > 0) {
-          const cIdx = parseInt(document.getElementById("color" + idx).value);
+          const cIdx = parseInt(sel.value);
           const cName = COLORS_LIST[cIdx][config.lang];
           if (!usedColors.includes(cName)) usedColors.push(cName);
         }
@@ -581,7 +557,6 @@
       const matCost = (totalGrams / 1000) * mat.priceKg;
       const powerCost = (mat.watts / 1000) * totalHours * config.kwhPrice;
       const prodCost = matCost + powerCost;
-
       const baseOffer = prodCost * config.defaultMarkup;
       let sellingPrice = baseOffer;
 
@@ -594,15 +569,15 @@
       if (tvaActive) {
         tvaVal = baseOffer * (tvaRate / 100);
         sellingPrice += tvaVal;
-        document.getElementById("resTvaLabel").textContent = `${t.tvaWord} (${tvaRate}%):`;
-        document.getElementById("resTvaVal").textContent = `${tvaVal.toFixed(2)} ${cur}`;
+        document.getElementById("resTvaLabel").textContent = t.tvaWord + " (" + tvaRate + "%):";
+        document.getElementById("resTvaVal").textContent = tvaVal.toFixed(2) + " " + cur;
       }
 
-      document.getElementById("resTotalGrams").textContent = `${totalGrams.toFixed(0)} g`;
-      document.getElementById("resTotalTime").textContent = `${h}h ${m}m`;
-      document.getElementById("resProdCost").textContent = `${prodCost.toFixed(2)} ${cur}`;
-      document.getElementById("resBaseOffer").textContent = `${baseOffer.toFixed(2)} ${cur}`;
-      document.getElementById("resFinalPrice").textContent = `${sellingPrice.toFixed(2)} ${cur}`;
+      document.getElementById("resTotalGrams").textContent = totalGrams.toFixed(0) + " g";
+      document.getElementById("resTotalTime").textContent = h + "h " + m + "m";
+      document.getElementById("resProdCost").textContent = prodCost.toFixed(2) + " " + cur;
+      document.getElementById("resBaseOffer").textContent = baseOffer.toFixed(2) + " " + cur;
+      document.getElementById("resFinalPrice").textContent = sellingPrice.toFixed(2) + " " + cur;
 
       document.getElementById("pDate").textContent = new Date().toLocaleDateString(config.lang === "ro" ? "ro-RO" : "en-GB");
       document.getElementById("pValMat").textContent = matName;
@@ -612,15 +587,15 @@
       } else {
         document.getElementById("pRowColors").style.display = "none";
       }
-      document.getElementById("pValNet").textContent = `${baseOffer.toFixed(2)} ${cur}`;
+      document.getElementById("pValNet").textContent = baseOffer.toFixed(2) + " " + cur;
       if (tvaActive) {
         document.getElementById("pRowTva").style.display = "flex";
-        document.getElementById("pLblTva").textContent = `${t.tvaWord} (${tvaRate}%):`;
-        document.getElementById("pValTva").textContent = `${tvaVal.toFixed(2)} ${cur}`;
+        document.getElementById("pLblTva").textContent = t.tvaWord + " (" + tvaRate + "%):";
+        document.getElementById("pValTva").textContent = tvaVal.toFixed(2) + " " + cur;
       } else {
         document.getElementById("pRowTva").style.display = "none";
       }
-      document.getElementById("pValTotal").textContent = `${sellingPrice.toFixed(2)} ${cur}`;
+      document.getElementById("pValTotal").textContent = sellingPrice.toFixed(2) + " " + cur;
     }
 
     function printQuote() {
@@ -629,12 +604,15 @@
     }
 
     function resetForm() {
+      document.querySelectorAll(".layer-row").forEach((row, index) => {
+        if (index === 0) {
+          row.querySelector("input").value = "";
+        } else {
+          row.remove();
+        }
+      });
       document.getElementById("printHours").value = "";
       document.getElementById("printMinutes").value = "";
-      document.getElementById("grams1").value = "";
-      document.getElementById("grams2").value = "";
-      document.getElementById("grams3").value = "";
-      document.getElementById("grams4").value = "";
       document.getElementById("wasteGrams").value = "";
       calculate();
     }
@@ -643,3 +621,5 @@
   </script>
 </body>
 </html>
+EOF
+echo "written"
