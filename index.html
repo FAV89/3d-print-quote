@@ -398,11 +398,23 @@
     function init() {
       applyLanguage();
       renderSettings();
-      addLayer();
+      const savedForm = loadFormState();
+      if (savedForm && Array.isArray(savedForm.layers) && savedForm.layers.length) {
+        savedForm.layers.forEach(l => addLayer(l.colorIdx || 0, l.grams || "", l.waste || ""));
+      } else {
+        addLayer();
+      }
+      if (savedForm) {
+        if (savedForm.material) document.getElementById("materialSelect").value = savedForm.material;
+        document.getElementById("printHours").value = savedForm.hours || "";
+        document.getElementById("printMinutes").value = savedForm.minutes || "";
+        document.getElementById("tvaToggle").checked = !!savedForm.tva;
+        document.getElementById("tvaRate").value = savedForm.tvaRate || 19;
+      }
       calculate();
     }
 
-    function addLayer(defaultColorIndex = 0, defaultGrams = "") {
+    function addLayer(defaultColorIndex = 0, defaultGrams = "", defaultWaste = "") {
       layerCount++;
       const container = document.getElementById("layersContainer");
       const rowId = "layerRow_" + layerCount;
@@ -420,7 +432,7 @@
       row.innerHTML = `
         <select class="color-select" onchange="calculate()">${colorOptionsHTML}</select>
         <input class="grams-input" type="number" placeholder="g" step="1" min="0" value="${defaultGrams}" oninput="calculate()" />
-        <input class="waste-input" type="number" placeholder="pierd. g" step="1" min="0" value="" oninput="calculate()" />
+        <input class="waste-input" type="number" placeholder="pierd. g" step="1" min="0" value="${defaultWaste}" oninput="calculate()" />
         ${!isFirst ? '<button type="button" class="btn-remove-layer" onclick="removeLayer(\'' + rowId + '\')">✕</button>' : '<div style="width: 38px;"></div>'}
       `;
       container.appendChild(row);
@@ -519,8 +531,29 @@
         config.materials[mat].watts = parseFloat(document.getElementById("matWatts_" + mat).value) || 100;
       });
       localStorage.setItem("calc3d_v5", JSON.stringify(config));
-      toggleSettings();
+      document.getElementById("settingsPanel").style.display = "none";
       calculate();
+
+    function saveFormState() {
+      const layers = Array.from(document.querySelectorAll(".layer-row")).map(row => ({
+        colorIdx: parseInt(row.querySelector("select").value) || 0,
+        grams: row.querySelector(".grams-input").value,
+        waste: row.querySelector(".waste-input").value
+      }));
+      const state = {
+        material: document.getElementById("materialSelect").value,
+        hours: document.getElementById("printHours").value,
+        minutes: document.getElementById("printMinutes").value,
+        layers: layers,
+        tva: document.getElementById("tvaToggle").checked,
+        tvaRate: document.getElementById("tvaRate").value
+      };
+      localStorage.setItem("calc3d_form_v1", JSON.stringify(state));
+    }
+
+    function loadFormState() {
+      try { return JSON.parse(localStorage.getItem("calc3d_form_v1")); } catch (e) { return null; }
+    }
     }
 
     function calculate() {
@@ -595,6 +628,7 @@
         document.getElementById("pRowTva").style.display = "none";
       }
       document.getElementById("pValTotal").textContent = sellingPrice.toFixed(2) + " " + cur;
+      saveFormState();
     }
 
     function printQuote() {
