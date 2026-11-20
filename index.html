@@ -490,12 +490,19 @@
     }
 
     function showToast(msg) {
-      const toast = document.getElementById("toast");
-      toast.textContent = msg;
-      toast.style.display = "block";
-      clearTimeout(toast._timer);
-      toast._timer = setTimeout(() => { toast.style.display = "none"; }, 2400);
-    }
+  // 1. Notificare nativă Android (Toast scurt pe ecran)
+  if (window.AndroidApp && typeof window.AndroidApp.showToast === "function") {
+    window.AndroidApp.showToast(msg);
+  }
+  
+  // 2. Notificarea HTML existentă (dacă ai un div de toast în pagină)
+  const toastEl = document.getElementById("toast");
+  if (toastEl) {
+    toastEl.textContent = msg;
+    toastEl.style.display = "block";
+    setTimeout(() => { toastEl.style.display = "none"; }, 2500);
+  }
+}
 
     function populatePrinterSelect() {
       const sel = document.getElementById("printerSelect");
@@ -928,9 +935,13 @@
       calculate();
     }
 
-    function printQuote() {
-      window.print();
-    }
+   function printQuote() {
+  if (window.AndroidApp && typeof window.AndroidApp.printPage === "function") {
+    window.AndroidApp.printPage();
+  } else {
+    window.print();
+  }
+}
 
     window.onload = init;
   </script>
