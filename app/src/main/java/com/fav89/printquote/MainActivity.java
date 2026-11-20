@@ -87,6 +87,15 @@ public class MainActivity extends Activity {
                 }
             });
         }
+        @JavascriptInterface
+        public void showToast(final String msg) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         @JavascriptInterface
         public void saveTextFile(final String filename, final String content) {
