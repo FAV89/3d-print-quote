@@ -12,7 +12,6 @@
       --accent: #00ae42; --accent-soft: rgba(0,174,66,0.14);
       --blue: #38bdf8; --amber: #f59e0b; --danger: #ef4444; --border: #2e3746;
     }
-    /* Am adaugat fonturile pentru Emoji aici pentru a repara iconitele ??? */
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif; }
     body {
       margin: 0; padding: 14px; color: var(--text); max-width: 520px;
@@ -72,11 +71,7 @@
     .action-buttons-2 { display: grid; grid-template-columns: 1fr; gap: 7px; margin-top: 7px; }
     .btn-act { width: 100%; padding: 11px 8px; border-radius: 11px; font-size: 0.84rem; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.25s ease; display: flex; justify-content: center; align-items: center; gap: 4px; }
     .btn-act:active { opacity: 0.8; }
-    .btn-act:hover{
-    transform: translateY(-2px);
-    opacity: 0.92;
-    filter: brightness(1.12);
-}
+    .btn-act:hover { transform: translateY(-2px); opacity: 0.92; filter: brightness(1.12); }
 
     .btn-print { border: 1px solid rgba(56,189,248,0.5); background: rgba(56,189,248,0.14); color: #bae6fd; }
     .btn-wa { border: 1px solid rgba(0,174,66,0.55); background: rgba(0,174,66,0.16); color: #86efac; }
@@ -103,82 +98,25 @@
     .bmc-footer { text-align: center; margin-top: 16px; padding: 12px; border-radius: 12px; background: rgba(26,31,39,0.75); border: 1px dashed rgba(245,158,11,0.4); }
     .bmc-text { font-size: 0.8rem; color: var(--muted); margin: 0 0 8px 0; }
     .btn-bmc { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #ffdd00; color: #111827; text-decoration: none; font-weight: 800; font-size: 0.86rem; padding: 9px 16px; border-radius: 10px; box-shadow: 0 4px 12px rgba(255,221,0,0.2); }
-    .btn-bmc:hover{
-    transform: scale(1.08);
-    box-shadow: 0 10px 25px rgba(255,221,0,0.35);
-    transition: all 0.2s ease;
-}
+    .btn-bmc:hover { transform: scale(1.08); box-shadow: 0 10px 25px rgba(255,221,0,0.35); transition: all 0.2s ease; }
     
     #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #00ae42; color: #fff; padding: 10px 18px; border-radius: 99px; font-size: 0.86rem; font-weight: 700; box-shadow: 0 6px 20px rgba(0,0,0,0.45); display: none; z-index: 999; white-space: nowrap; }
     #printSheet { display: none; }
 
-   @media print {
-
- body > *{
-    display:none !important;
-}
-
-#printSheet{
-    display:block !important;
-}
-
-  #printSheet{
-    display:block !important;
-    width:100%;
-    max-width:800px;
-    margin:0 auto;
-    background:white;
-    color:#111827;
-    border:1px solid #d1d5db;
-    border-radius:12px;
-    padding:24px;
-}
-
-  .print-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border-bottom:2px solid #111827;
-      padding-bottom:12px;
-      margin-bottom:20px;
-  }
-
-  .print-title{
-      font-size:1.4rem;
-      font-weight:800;
-      color:#111827;
-      margin:0;
-  }
-
-  .print-date{
-      color:#4b5563;
-      font-size:0.9rem;
-  }
-
-  .print-row{
-      display:flex;
-      justify-content:space-between;
-      padding:10px 0;
-      border-bottom:1px solid #e5e7eb;
-  }
-
-  .print-total{
-      display:flex;
-      justify-content:space-between;
-      margin-top:20px;
-      padding:16px;
-      background:#f3f4f6;
-      border-radius:10px;
-      font-size:1.35rem;
-      font-weight:800;
-  }
-  .print-note{
-    margin-top:16px;
-    font-size:0.82rem;
-    color:#6b7280;
-    text-align:center;
-}
-}
+    @media print {
+      body > * { display:none !important; }
+      #printSheet {
+        display:block !important; width:100%; max-width:800px; margin:0 auto;
+        background:white; color:#111827; border:1px solid #d1d5db;
+        border-radius:12px; padding:24px;
+      }
+      .print-header { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #111827; padding-bottom:12px; margin-bottom:20px; }
+      .print-title { font-size:1.4rem; font-weight:800; color:#111827; margin:0; }
+      .print-date { color:#4b5563; font-size:0.9rem; }
+      .print-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e5e7eb; }
+      .print-total { display:flex; justify-content:space-between; margin-top:20px; padding:16px; background:#f3f4f6; border-radius:10px; font-size:1.35rem; font-weight:800; }
+      .print-note { margin-top:16px; font-size:0.82rem; color:#6b7280; text-align:center; }
+    }
   </style>
 </head>
 <body>
@@ -198,44 +136,22 @@
   <!-- SETTINGS PANEL -->
   <div class="card no-print" id="settingsPanel">
     <div class="card-title" id="lblSettingsTitle">Setări Atelier, Costuri & Imprimante</div>
-    
     <div class="grid-2">
-      <div>
-        <label id="lblSetStudio">Nume Atelier / Firma (PDF)</label>
-        <input type="text" id="setStudio" />
-      </div>
-      <div>
-        <label id="lblSetContact">Telefon / Email (PDF)</label>
-        <input type="text" id="setContact" />
-      </div>
-      <div>
-        <label id="lblSetKwh">Preț curent (kWh)</label>
-        <input type="number" id="setKwh" step="0.01" />
-      </div>
-      <div>
-        <label id="lblSetMarkup">Adaos (multiplicator, ex: 2)</label>
-        <input type="number" id="setMarkup" step="0.1" min="1" />
-      </div>
-      <div>
-        <label id="lblSetWear">Uzură imprimantă / oră</label>
-        <input type="number" id="setWear" step="0.1" min="0" />
-      </div>
-      <div>
-        <label id="lblSetLabor">Manoperă / pregătire (fix)</label>
-        <input type="number" id="setLabor" step="0.1" min="0" />
-      </div>
+      <div><label id="lblSetStudio">Nume Atelier / Firma (PDF)</label><input type="text" id="setStudio" /></div>
+      <div><label id="lblSetContact">Telefon / Email (PDF)</label><input type="text" id="setContact" /></div>
+      <div><label id="lblSetKwh">Preț curent (kWh)</label><input type="number" id="setKwh" step="0.01" /></div>
+      <div><label id="lblSetMarkup">Adaos (multiplicator, ex: 2)</label><input type="number" id="setMarkup" step="0.1" min="1" /></div>
+      <div><label id="lblSetWear">Uzură imprimantă / oră</label><input type="number" id="setWear" step="0.1" min="0" /></div>
+      <div><label id="lblSetLabor">Manoperă / pregătire (fix)</label><input type="number" id="setLabor" step="0.1" min="0" /></div>
     </div>
     <div style="margin-top:8px;">
       <label id="lblSetCurrency">Monedă (ex: RON, EUR, USD)</label>
       <input type="text" id="setCurrency" maxlength="6" />
     </div>
-
     <div class="settings-section-sub" id="lblColMat">Materiale (Preț / kg)</div>
     <div id="materialsSettingsList"></div>
-
     <div class="settings-section-sub" id="lblColPrinter">Imprimante (Consum max W)</div>
     <div id="printersSettingsList"></div>
-
     <button class="btn-save" id="btnSave" onclick="saveSettings()">💾 Salvează Setările</button>
     <button class="btn-reset-settings" id="btnResetSettings" onclick="resetDefaultSettings()">↩️ Revino la setările implicite (RON)</button>
   </div>
@@ -250,21 +166,11 @@
   <div class="card no-print">
     <div class="card-title" id="lblSec1">1. Proiect, Imprimantă & Timp</div>
     <div class="grid-proj">
-      <div>
-        <label id="lblProjName">Nume Proiect / Piesă (opțional)</label>
-        <input type="text" id="projectName" placeholder="Ex: Suport perete..." />
-      </div>
-      <div>
-        <label id="lblQty">Cantitate (buc.)</label>
-        <input type="number" id="projectQty" value="1" min="1" oninput="calculate()" />
-      </div>
+      <div><label id="lblProjName">Nume Proiect / Piesă (opțional)</label><input type="text" id="projectName" placeholder="Ex: Suport perete..." oninput="calculate()" /></div>
+      <div><label id="lblQty">Cantitate (buc.)</label><input type="number" id="projectQty" value="1" min="1" oninput="calculate()" /></div>
     </div>
-    
     <div class="grid-2-pm">
-      <div>
-        <label id="lblPrinter">Imprimantă</label>
-        <select id="printerSelect" onchange="calculate()"></select>
-      </div>
+      <div><label id="lblPrinter">Imprimantă</label><select id="printerSelect" onchange="calculate()"></select></div>
       <div>
         <label id="lblMat">Material</label>
         <select id="materialSelect" onchange="calculate()">
@@ -276,16 +182,9 @@
         </select>
       </div>
     </div>
-    
     <div class="grid-2" style="margin-top:10px;">
-      <div>
-        <label id="lblHours">Ore (total print)</label>
-        <input type="number" id="printHours" placeholder="0" step="1" min="0" oninput="calculate()" />
-      </div>
-      <div>
-        <label id="lblMinutes">Minute</label>
-        <input type="number" id="printMinutes" placeholder="0" step="1" min="0" max="59" oninput="calculate()" />
-      </div>
+      <div><label id="lblHours">Ore (total print)</label><input type="number" id="printHours" placeholder="0" step="1" min="0" oninput="calculate()" /></div>
+      <div><label id="lblMinutes">Minute</label><input type="number" id="printMinutes" placeholder="0" step="1" min="0" max="59" oninput="calculate()" /></div>
     </div>
     <div class="info-pill" id="infoPill"></div>
   </div>
@@ -343,15 +242,7 @@
 
   <div class="bmc-footer no-print">
     <p class="bmc-text" id="lblBmcFooter">Calculatoarele te ajută să îți crești afacerea 3D?</p>
-    <a class="btn-bmc"
-   id="btnBmcFooter"
-   href="https://buymeacoffee.com/VRG.FAV"
-   target="_blank"
-   rel="noopener noreferrer">
-
-   ☕ Susține proiectul (5€)
-
-</a>
+    <a class="btn-bmc" id="btnBmcFooter" href="https://buymeacoffee.com/VRG.FAV" target="_blank" rel="noopener noreferrer">☕ Susține proiectul (5€)</a>
   </div>
 
   <!-- PRINT SHEET -->
@@ -379,9 +270,9 @@
   <div id="toast"></div>
 
   <script>
-    // Am schimbat cheile de stocare pentru a forta browserul sa ignore datele vechi corupte
     const STORAGE_KEY = "calc3d_pro_v2_fixed";
     const HISTORY_KEY = "calc3d_pro_history_v2_fixed";
+    const DRAFT_KEY = "calc3d_pro_draft_v1";
     
     const COLORS_LIST = [
       { ro: "Gri", en: "Grey" }, { ro: "Alb", en: "White" }, { ro: "Negru", en: "Black" },
@@ -486,23 +377,21 @@
       renderSettings();
       updateHistoryBadge();
       addLayer(0, "", "");
+      loadDraftState();
       calculate();
     }
 
     function showToast(msg) {
-  // 1. Notificare nativă Android (Toast scurt pe ecran)
-  if (window.AndroidApp && typeof window.AndroidApp.showToast === "function") {
-    window.AndroidApp.showToast(msg);
-  }
-  
-  // 2. Notificarea HTML existentă (dacă ai un div de toast în pagină)
-  const toastEl = document.getElementById("toast");
-  if (toastEl) {
-    toastEl.textContent = msg;
-    toastEl.style.display = "block";
-    setTimeout(() => { toastEl.style.display = "none"; }, 2500);
-  }
-}
+      if (window.AndroidApp && typeof window.AndroidApp.showToast === "function") {
+        window.AndroidApp.showToast(msg);
+      }
+      const toastEl = document.getElementById("toast");
+      if (toastEl) {
+        toastEl.textContent = msg;
+        toastEl.style.display = "block";
+        setTimeout(() => { toastEl.style.display = "none"; }, 2500);
+      }
+    }
 
     function populatePrinterSelect() {
       const sel = document.getElementById("printerSelect");
@@ -674,23 +563,21 @@
       document.getElementById("setLabor").value = config.laborFixed;
       document.getElementById("setCurrency").value = config.currency;
 
-      const matList = document.getElementById("materialsSettingsList");
-      matList.innerHTML = "";
-      Object.keys(config.materials).forEach(mat => {
-        const row = document.createElement("div");
-        row.className = "settings-grid-2";
-        row.innerHTML = `<span>${mat}</span><input type="number" id="matPrice_${mat}" value="${config.materials[mat].priceKg}" step="1" />`;
-        matList.appendChild(row);
-      });
+      const matContainer = document.getElementById("materialsSettingsList");
+      matContainer.innerHTML = Object.keys(config.materials).map(mat => `
+        <div class="settings-grid-2">
+          <span>${mat}</span>
+          <input type="number" data-mat="${mat}" value="${config.materials[mat].priceKg}" step="1" min="0" />
+        </div>
+      `).join("");
 
-      const prtList = document.getElementById("printersSettingsList");
-      prtList.innerHTML = "";
-      Object.keys(config.printers).forEach((name, idx) => {
-        const row = document.createElement("div");
-        row.className = "settings-grid-2";
-        row.innerHTML = `<span>${name}</span><input type="number" id="prtWatts_${idx}" value="${config.printers[name].maxWatts}" step="10" />`;
-        prtList.appendChild(row);
-      });
+      const printContainer = document.getElementById("printersSettingsList");
+      printContainer.innerHTML = Object.keys(config.printers).map(p => `
+        <div class="settings-grid-2">
+          <span>${p}</span>
+          <input type="number" data-printer="${p}" value="${config.printers[p].maxWatts}" step="10" min="0" />
+        </div>
+      `).join("");
     }
 
     function saveSettings() {
@@ -703,78 +590,72 @@
       config.laborFixed = parseFloat(document.getElementById("setLabor").value) || 0;
       config.currency = document.getElementById("setCurrency").value.trim() || "RON";
 
-      Object.keys(config.materials).forEach(mat => {
-        const p = parseFloat(document.getElementById(`matPrice_${mat}`).value);
-        if (!isNaN(p)) config.materials[mat].priceKg = p;
+      document.querySelectorAll("#materialsSettingsList input").forEach(input => {
+        const mat = input.dataset.mat;
+        config.materials[mat].priceKg = parseFloat(input.value) || 0;
       });
 
-      Object.keys(config.printers).forEach((name, idx) => {
-        const w = parseFloat(document.getElementById(`prtWatts_${idx}`).value);
-        if (!isNaN(w)) config.printers[name].maxWatts = w;
+      document.querySelectorAll("#printersSettingsList input").forEach(input => {
+        const p = input.dataset.printer;
+        config.printers[p].maxWatts = parseFloat(input.value) || 0;
       });
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
       populatePrinterSelect();
-      toggleSettings();
       calculate();
       showToast(t.toastSettings);
+      toggleSettings();
     }
 
     function resetDefaultSettings() {
-      const currentLang = config.lang;
       config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-      config.lang = currentLang;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
       populatePrinterSelect();
       renderSettings();
-      applyLanguage();
       calculate();
+      showToast(I18N[config.lang].toastSettings);
     }
 
     function calculate() {
       const t = I18N[config.lang];
       const projectName = document.getElementById("projectName").value.trim();
-      const qty = Math.max(1, parseInt(document.getElementById("projectQty").value) || 1);
+      const qty = parseInt(document.getElementById("projectQty").value) || 1;
       const printerName = document.getElementById("printerSelect").value;
       const mat = document.getElementById("materialSelect").value;
-      const matConf = config.materials[mat] || { priceKg: 60 };
-      const printerConf = config.printers[printerName] || { maxWatts: 150 };
-
-      document.getElementById("infoPill").innerHTML = 
-        `<span>${t.infoPrice}: ${matConf.priceKg} ${config.currency}</span>` +
-        `<span>${t.infoMax}: ${printerConf.maxWatts} W</span>` +
-        `<span>${t.infoKwh}: ${config.kwhPrice} ${config.currency}/kWh</span>`;
-
       const h = parseInt(document.getElementById("printHours").value) || 0;
       const m = parseInt(document.getElementById("printMinutes").value) || 0;
-      const totalHoursDecimal = h + (m / 60);
 
-      let gramsLayers = 0, gramsWaste = 0, colorsUsedList = [];
+      const printerConf = config.printers[printerName] || { maxWatts: 1000 };
+      const matConf = config.materials[mat] || { priceKg: 60 };
+
+      document.getElementById("infoPill").innerHTML = `
+        <span>${t.infoPrice}: <strong>${matConf.priceKg} ${config.currency}</strong></span>
+        <span>${t.infoMax}: <strong>${printerConf.maxWatts}W</strong></span>
+        <span>${t.infoKwh}: <strong>${config.kwhPrice} ${config.currency}</strong></span>
+      `;
+
+      let totalGrams = 0;
+      let colorsUsedList = [];
 
       document.querySelectorAll(".layer-row").forEach(row => {
-        const cIdx = parseInt(row.querySelector(".layer-color").value);
         const g = parseFloat(row.querySelector(".layer-grams").value) || 0;
         const w = parseFloat(row.querySelector(".layer-waste").value) || 0;
-        if (g > 0) {
-          gramsLayers += g;
-          colorsUsedList.push(`${COLORS_LIST[cIdx][config.lang]} (${g}g)`);
+        const colorIdx = parseInt(row.querySelector(".layer-color").value);
+        if (g > 0 || w > 0) {
+          totalGrams += (g + w);
+          colorsUsedList.push(COLORS_LIST[colorIdx][config.lang]);
         }
-        if (w > 0) gramsWaste += w;
       });
 
-      const totalGrams = gramsLayers + gramsWaste;
-
-      // Costuri
+      const totalHoursDecimal = h + (m / 60);
       const costMaterial = (totalGrams / 1000) * matConf.priceKg;
       const costElectricity = (printerConf.maxWatts / 1000) * totalHoursDecimal * config.kwhPrice;
       const wearCost = config.wearPerHour * totalHoursDecimal;
       const costProduction = costMaterial + costElectricity + wearCost;
       const laborCost = config.laborFixed;
 
-      // Adaos (Markup)
       const baseOffer = (costProduction + laborCost) * config.defaultMarkup;
 
-      // TVA
       const tvaActive = document.getElementById("tvaToggle").checked;
       const tvaRateRow = document.getElementById("tvaRateRow");
       const resTvaLine = document.getElementById("resTvaLine");
@@ -796,7 +677,6 @@
 
       const unitPrice = finalPrice / qty;
 
-      // Update UI Rezultate
       document.getElementById("resTotalGrams").textContent = `${totalGrams} g`;
       document.getElementById("resTotalTime").textContent = `${h}h ${m}m`;
       document.getElementById("resProdCost").textContent = `${costProduction.toFixed(2)} ${config.currency}`;
@@ -806,7 +686,6 @@
       document.getElementById("resUnitPrice").textContent = `${unitPrice.toFixed(2)} ${config.currency} / ${t.unitSuffix}`;
       document.getElementById("resFinalPrice").textContent = `${finalPrice.toFixed(2)} ${config.currency}`;
 
-      // Update Print Sheet Data
       document.getElementById("pStudio").textContent = config.studioName || "";
       document.getElementById("pContact").textContent = config.studioContact || "";
       document.getElementById("pDate").textContent = new Date().toLocaleDateString(config.lang === "ro" ? "ro-RO" : "en-US");
@@ -828,7 +707,6 @@
       }
       document.getElementById("pValTotal").textContent = `${finalPrice.toFixed(2)} ${config.currency}`;
 
-      // Salvare date pentru istoric / whatsapp
       lastCalcData = {
         projectName, qty, printerName, matName: mat,
         colors: colorsUsedList.join(", "),
@@ -836,6 +714,61 @@
         baseOffer, tvaVal, finalPrice, unitPrice, currency: config.currency,
         tvaRate: parseFloat(document.getElementById("tvaRate").value) || 21, tvaActive
       };
+
+      saveDraftState();
+    }
+
+    function saveDraftState() {
+      const draftState = {
+        projectName: document.getElementById("projectName")?.value || "",
+        qty: document.getElementById("projectQty")?.value || "1",
+        printer: document.getElementById("printerSelect")?.value || "",
+        material: document.getElementById("materialSelect")?.value || "",
+        hours: document.getElementById("printHours")?.value || "",
+        minutes: document.getElementById("printMinutes")?.value || "",
+        tvaActive: !!document.getElementById("tvaToggle")?.checked,
+        tvaRate: document.getElementById("tvaRate")?.value || "21"
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draftState));
+    }
+
+    function loadDraftState() {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        const d = JSON.parse(raw);
+
+        if (d.projectName !== undefined && document.getElementById("projectName")) {
+          document.getElementById("projectName").value = d.projectName;
+        }
+        if (d.qty !== undefined && document.getElementById("projectQty")) {
+          document.getElementById("projectQty").value = d.qty;
+        }
+        if (d.printer && document.getElementById("printerSelect")) {
+          const pSel = document.getElementById("printerSelect");
+          if ([...pSel.options].some(opt => opt.value === d.printer)) {
+            pSel.value = d.printer;
+          }
+        }
+        if (d.material && document.getElementById("materialSelect")) {
+          const mSel = document.getElementById("materialSelect");
+          if ([...mSel.options].some(opt => opt.value === d.material)) {
+            mSel.value = d.material;
+          }
+        }
+        if (d.hours !== undefined && document.getElementById("printHours")) {
+          document.getElementById("printHours").value = d.hours;
+        }
+        if (d.minutes !== undefined && document.getElementById("printMinutes")) {
+          document.getElementById("printMinutes").value = d.minutes;
+        }
+        if (d.tvaActive !== undefined && document.getElementById("tvaToggle")) {
+          document.getElementById("tvaToggle").checked = d.tvaActive;
+        }
+        if (d.tvaRate && document.getElementById("tvaRate")) {
+          document.getElementById("tvaRate").value = d.tvaRate;
+        }
+      } catch (e) {}
     }
 
     function updateHistoryBadge() {
@@ -935,16 +868,15 @@
       calculate();
     }
 
-   function printQuote() {
-  if (window.AndroidApp && typeof window.AndroidApp.printPage === "function") {
-    window.AndroidApp.printPage();
-  } else {
-    window.print();
-  }
-}
+    function printQuote() {
+      if (window.AndroidApp && typeof window.AndroidApp.printPage === "function") {
+        window.AndroidApp.printPage();
+      } else {
+        window.print();
+      }
+    }
 
     window.onload = init;
   </script>
-  
 </body>
 </html>
