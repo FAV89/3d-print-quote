@@ -3,181 +3,211 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0f172a" />
-  <title>3D Print Quote</title>
+  <meta name="theme-color" content="#12151a" />
+  <title>3D Print Quote Pro</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --card-light: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --green: #22c55e;
-      --danger: #ef4444;
-      --border: #334155;
+      --bg: #12151a; --card: rgba(26,31,39,0.92); --card-light: #28303d;
+      --input-bg: #0f1216; --text: #f3f4f6; --muted: #9ca3af;
+      --accent: #00ae42; --accent-soft: rgba(0,174,66,0.14);
+      --blue: #38bdf8; --amber: #f59e0b; --danger: #ef4444; --border: #2e3746;
     }
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    /* Am adaugat fonturile pentru Emoji aici pentru a repara iconitele ??? */
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif; }
     body {
-      margin: 0; padding: 14px; background: var(--bg); color: var(--text);
-      max-width: 520px; margin-inline: auto; padding-bottom: 40px;
+      margin: 0; padding: 14px; color: var(--text); max-width: 520px;
+      margin-inline: auto; padding-bottom: 44px; background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(0,174,66,0.08) 0%, transparent 55%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.028) 0px, rgba(255,255,255,0.028) 1px,
+          transparent 1px, transparent 3px, rgba(0,0,0,0.35) 3px, rgba(0,0,0,0.35) 4px);
     }
-    header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 14px; gap: 8px;
-    }
-    h1 { font-size: 1.2rem; margin: 0; color: var(--accent); }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px; }
+    .brand-wrap { display: flex; align-items: center; gap: 8px; }
+    h1 { font-size: 1.15rem; margin: 0; color: #fff; letter-spacing: -0.01em; }
+    .badge-pro { background: var(--accent-soft); border: 1px solid rgba(0,174,66,0.45); color: #4ade80; font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
     .header-actions { display: flex; gap: 6px; }
-    .btn-top {
-      background: var(--card); border: 1px solid var(--border); color: var(--text);
-      padding: 8px 11px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
-    }
-    .card {
-      background: var(--card); border-radius: 14px; padding: 14px;
-      margin-bottom: 12px; border: 1px solid var(--border);
-    }
-    .card-title {
-      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em;
-      color: var(--muted); margin: 0 0 10px 0; font-weight: 600;
-    }
+    .btn-top { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s; display: flex; align-items: center; gap: 4px; }
+    .btn-top:hover { border-color: var(--accent); }
+    
+    .card { background: var(--card); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 14px; padding: 14px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: 0 6px 18px rgba(0,0,0,0.28); }
+    .card-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: #4ade80; margin: 0 0 10px 0; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+    
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .grid-2-pm { display: grid; grid-template-columns: 1.55fr 0.75fr; gap: 8px; }
-
-    /* Layere pe același rând: culoare + grame + pierdere + (opțional) ștergere */
-    .layer-row {
-      display: flex; gap: 6px; margin-bottom: 8px; align-items: flex-end;
-    }
+    .grid-proj { display: grid; grid-template-columns: 1.7fr 0.65fr; gap: 8px; margin-bottom: 10px; }
+    
+    .layer-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: flex-end; }
     .layer-col-color { flex: 1; min-width: 0; }
     .layer-col-grams { flex: 0.72; min-width: 0; }
     .layer-col-waste { flex: 0.72; min-width: 0; }
-    .mini-label {
-      display: block; font-size: 0.7rem; color: var(--muted);
-      margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .layer-row select, .layer-row input[type="number"] {
-      padding: 9px 7px; font-size: 0.9rem;
-    }
-    .btn-remove-layer {
-      background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger);
-      color: #fca5a5; border-radius: 10px; padding: 9px 9px;
-      font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      height: 39px; flex-shrink: 0;
-    }
-
-    .btn-add-layer {
-      width: 100%; padding: 9px; border-radius: 10px;
-      border: 1px dashed var(--accent); background: rgba(56, 189, 248, 0.08);
-      color: var(--accent); font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; margin-top: 4px;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: all 0.2s;
-    }
-    .btn-add-layer:hover {
-      background: rgba(56, 189, 248, 0.18);
-    }
-
-    label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    select, input[type="number"], input[type="text"] {
-      width: 100%; padding: 10px 10px; border-radius: 10px;
-      border: 1px solid var(--border); background: var(--bg); color: var(--text);
-      font-size: 0.95rem; outline: none;
-    }
+    .mini-label { display: block; font-size: 0.7rem; color: var(--muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .layer-row select, .layer-row input[type="number"] { padding: 9px 7px; font-size: 0.9rem; }
+    .btn-remove-layer { background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.5); color: #fca5a5; border-radius: 10px; padding: 9px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; height: 39px; flex-shrink: 0; }
+    
+    .btn-add-layer { width: 100%; padding: 9px; border-radius: 10px; border: 1px dashed var(--accent); background: var(--accent-soft); color: #4ade80; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+    .btn-add-layer:hover { background: rgba(0,174,66,0.24); }
+    
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    select, input[type="number"], input[type="text"] { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 0.94rem; outline: none; }
     select:focus, input:focus { border-color: var(--accent); }
-    .info-pill {
-      display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap;
-      font-size: 0.8rem; color: var(--muted); background: rgba(15, 23, 42, 0.6);
-      padding: 8px 10px; border-radius: 8px; margin-top: 8px;
-    }
-    .switch-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 0;
-    }
-    .switch {
-      position: relative; display: inline-block; width: 50px; height: 28px;
-    }
+    
+    .info-pill { display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); background: rgba(15,18,22,0.75); border: 1px solid rgba(46,55,70,0.6); padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+    .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+    .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; cursor: pointer; inset: 0; background-color: var(--card-light);
-      transition: .2s; border-radius: 28px;
-    }
-    .slider:before {
-      position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px;
-      background-color: white; transition: .2s; border-radius: 50%;
-    }
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--card-light); transition: .2s; border-radius: 28px; }
+    .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; }
     input:checked + .slider { background-color: var(--accent); }
     input:checked + .slider:before { transform: translateX(22px); }
-    .summary-line {
-      display: flex; justify-content: space-between; padding: 7px 0;
-      font-size: 0.95rem; border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-    }
+    
+    .summary-line { display: flex; justify-content: space-between; padding: 7px 0; font-size: 0.93rem; border-bottom: 1px solid rgba(46,55,70,0.6); }
     .summary-line:last-child { border-bottom: none; }
-    .total-box {
-      background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4);
-      border-radius: 12px; padding: 12px; margin-top: 10px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .total-label { font-size: 1rem; font-weight: 600; color: var(--text); }
-    .total-price { font-size: 1.5rem; font-weight: 800; color: var(--green); }
-    .action-buttons {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;
-    }
-    .btn-print {
-      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--accent);
-      background: rgba(56, 189, 248, 0.15); color: #bae6fd; font-size: 0.95rem;
-      font-weight: 600; cursor: pointer;
-    }
-    .btn-reset {
-      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--danger);
-      background: rgba(239, 68, 68, 0.12); color: #fca5a5; font-size: 0.95rem;
-      font-weight: 600; cursor: pointer;
-    }
-    #settingsPanel { display: none; }
-    .settings-grid-2 {
-      display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px;
-      align-items: center; margin-bottom: 8px;
-    }
-    .settings-grid-2 span { font-weight: 600; font-size: 0.88rem; }
-    .settings-section-sub {
-      color: var(--muted); font-size: 0.78rem; margin: 12px 0 6px 0; font-weight: 600;
-    }
-    .btn-save {
-      width: 100%; padding: 10px; border-radius: 10px; border: none;
-      background: var(--accent); color: #0f172a; font-weight: 700;
-      font-size: 0.95rem; cursor: pointer; margin-top: 8px;
-    }
-    .btn-reset-settings {
-      width: 100%; padding: 8px; border-radius: 10px;
-      border: 1px solid var(--border); background: transparent; color: var(--muted);
-      font-weight: 600; font-size: 0.82rem; cursor: pointer; margin-top: 6px;
-    }
+    .total-box { background: linear-gradient(135deg, rgba(0,174,66,0.16), rgba(0,174,66,0.06)); border: 1px solid rgba(0,174,66,0.5); border-radius: 12px; padding: 12px 14px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .total-label { font-size: 0.98rem; font-weight: 700; color: var(--text); }
+    .total-sub { font-size: 0.78rem; color: #86efac; margin-top: 2px; font-weight: 600; }
+    .total-price { font-size: 1.5rem; font-weight: 800; color: #4ade80; }
+    
+    .action-buttons-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-top: 10px; }
+    .action-buttons-2 { display: grid; grid-template-columns: 1fr; gap: 7px; margin-top: 7px; }
+    .btn-act { width: 100%; padding: 11px 8px; border-radius: 11px; font-size: 0.84rem; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.25s ease; display: flex; justify-content: center; align-items: center; gap: 4px; }
+    .btn-act:active { opacity: 0.8; }
+    .btn-act:hover{
+    transform: translateY(-2px);
+    opacity: 0.92;
+    filter: brightness(1.12);
+}
 
+    .btn-print { border: 1px solid rgba(56,189,248,0.5); background: rgba(56,189,248,0.14); color: #bae6fd; }
+    .btn-wa { border: 1px solid rgba(0,174,66,0.55); background: rgba(0,174,66,0.16); color: #86efac; }
+    .btn-save-quote { border: 1px solid rgba(245,158,11,0.5); background: rgba(245,158,11,0.14); color: #fde68a; }
+    .btn-reset { border: 1px solid rgba(239,68,68,0.5); background: rgba(239,68,68,0.12); color: #fca5a5; }
+    
+    #historyPanel { display: none; }
+    .history-item { background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .history-info { min-width: 0; flex: 1; }
+    .history-title { font-weight: 700; font-size: 0.92rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-meta { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+    .history-price { font-weight: 800; color: #4ade80; font-size: 0.92rem; }
+    .history-btns { display: flex; gap: 5px; }
+    .btn-mini { padding: 6px 9px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: var(--card-light); color: var(--text); }
+    .btn-mini-del { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+    
+    #settingsPanel { display: none; }
+    .settings-grid-2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .settings-grid-2 span { font-weight: 600; font-size: 0.86rem; }
+    .settings-section-sub { color: #4ade80; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 14px 0 6px 0; font-weight: 700; border-top: 1px solid var(--border); padding-top: 10px; }
+    .btn-save { width: 100%; padding: 11px; border-radius: 10px; border: none; background: var(--accent); color: #052e16; font-weight: 800; font-size: 0.95rem; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 6px; }
+    .btn-reset-settings { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-weight: 600; font-size: 0.8rem; cursor: pointer; margin-top: 6px; display: flex; justify-content: center; align-items: center; gap: 6px; }
+    
+    .bmc-footer { text-align: center; margin-top: 16px; padding: 12px; border-radius: 12px; background: rgba(26,31,39,0.75); border: 1px dashed rgba(245,158,11,0.4); }
+    .bmc-text { font-size: 0.8rem; color: var(--muted); margin: 0 0 8px 0; }
+    .btn-bmc { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #ffdd00; color: #111827; text-decoration: none; font-weight: 800; font-size: 0.86rem; padding: 9px 16px; border-radius: 10px; box-shadow: 0 4px 12px rgba(255,221,0,0.2); }
+    .btn-bmc:hover{
+    transform: scale(1.08);
+    box-shadow: 0 10px 25px rgba(255,221,0,0.35);
+    transition: all 0.2s ease;
+}
+    
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #00ae42; color: #fff; padding: 10px 18px; border-radius: 99px; font-size: 0.86rem; font-weight: 700; box-shadow: 0 6px 20px rgba(0,0,0,0.45); display: none; z-index: 999; white-space: nowrap; }
     #printSheet { display: none; }
 
-    @media print {
-      body { background: #ffffff !important; color: #111827 !important; max-width: 100% !important; padding: 20px !important; }
-      header, #settingsPanel, .no-print { display: none !important; }
-      #printSheet { display: block !important; border: 1px solid #d1d5db; border-radius: 12px; padding: 24px; }
-      .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #111827; padding-bottom: 12px; margin-bottom: 20px; }
-      .print-title { font-size: 1.4rem; font-weight: 800; color: #111827; margin: 0; }
-      .print-date { font-size: 0.9rem; color: #4b5563; }
-      .print-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 1.05rem; }
-      .print-total { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 16px; background: #f3f4f6 !important; border-radius: 10px; font-size: 1.35rem; font-weight: 800; color: #111827; }
-    }
+   @media print {
+
+ body > *{
+    display:none !important;
+}
+
+#printSheet{
+    display:block !important;
+}
+
+  #printSheet{
+    display:block !important;
+    width:100%;
+    max-width:800px;
+    margin:0 auto;
+    background:white;
+    color:#111827;
+    border:1px solid #d1d5db;
+    border-radius:12px;
+    padding:24px;
+}
+
+  .print-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:2px solid #111827;
+      padding-bottom:12px;
+      margin-bottom:20px;
+  }
+
+  .print-title{
+      font-size:1.4rem;
+      font-weight:800;
+      color:#111827;
+      margin:0;
+  }
+
+  .print-date{
+      color:#4b5563;
+      font-size:0.9rem;
+  }
+
+  .print-row{
+      display:flex;
+      justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid #e5e7eb;
+  }
+
+  .print-total{
+      display:flex;
+      justify-content:space-between;
+      margin-top:20px;
+      padding:16px;
+      background:#f3f4f6;
+      border-radius:10px;
+      font-size:1.35rem;
+      font-weight:800;
+  }
+  .print-note{
+    margin-top:16px;
+    font-size:0.82rem;
+    color:#6b7280;
+    text-align:center;
+}
+}
   </style>
 </head>
 <body>
 
   <header class="no-print">
-    <h1 id="appTitle">&#x1F5A8;&#xFE0F; 3D Print Quote</h1>
+    <div class="brand-wrap">
+      <h1 id="appTitle">🖨️ 3D Print Quote</h1>
+      <span class="badge-pro">PRO</span>
+    </div>
     <div class="header-actions">
+      <button class="btn-top" id="historyBtn" onclick="toggleHistory()">📂 Istoric (0)</button>
       <button class="btn-top" id="langBtn" onclick="toggleLang()">EN</button>
-      <button class="btn-top" id="settingsBtn" onclick="toggleSettings()">&#x2699;&#xFE0F; Setări</button>
+      <button class="btn-top" id="settingsBtn" onclick="toggleSettings()">⚙️ Setări</button>
     </div>
   </header>
 
-  <div id="settingsPanel" class="card no-print">
-    <p class="card-title" id="lblSettingsTitle">Setări Materiale, Imprimante, Adaos & Monedă</p>
-    <div class="grid-2" style="margin-bottom: 10px;">
+  <!-- SETTINGS PANEL -->
+  <div class="card no-print" id="settingsPanel">
+    <div class="card-title" id="lblSettingsTitle">Setări Atelier, Costuri & Imprimante</div>
+    
+    <div class="grid-2">
+      <div>
+        <label id="lblSetStudio">Nume Atelier / Firma (PDF)</label>
+        <input type="text" id="setStudio" />
+      </div>
+      <div>
+        <label id="lblSetContact">Telefon / Email (PDF)</label>
+        <input type="text" id="setContact" />
+      </div>
       <div>
         <label id="lblSetKwh">Preț curent (kWh)</label>
         <input type="number" id="setKwh" step="0.01" />
@@ -186,35 +216,51 @@
         <label id="lblSetMarkup">Adaos (multiplicator, ex: 2)</label>
         <input type="number" id="setMarkup" step="0.1" min="1" />
       </div>
+      <div>
+        <label id="lblSetWear">Uzură imprimantă / oră</label>
+        <input type="number" id="setWear" step="0.1" min="0" />
+      </div>
+      <div>
+        <label id="lblSetLabor">Manoperă / pregătire (fix)</label>
+        <input type="number" id="setLabor" step="0.1" min="0" />
+      </div>
     </div>
-    <div style="margin-bottom: 10px;">
+    <div style="margin-top:8px;">
       <label id="lblSetCurrency">Monedă (ex: RON, EUR, USD)</label>
       <input type="text" id="setCurrency" maxlength="6" />
     </div>
 
-    <div class="settings-section-sub">
-      <div class="settings-grid-2" style="margin-bottom: 4px;">
-        <div id="lblColMat">Material</div>
-        <div id="lblColPrice">Preț / kg</div>
-      </div>
-    </div>
+    <div class="settings-section-sub" id="lblColMat">Materiale (Preț / kg)</div>
     <div id="materialsSettingsList"></div>
 
-    <div class="settings-section-sub">
-      <div class="settings-grid-2" style="margin-bottom: 4px;">
-        <div id="lblColPrinter">Imprimantă</div>
-        <div id="lblColWatts">Consum max (W)</div>
-      </div>
-    </div>
+    <div class="settings-section-sub" id="lblColPrinter">Imprimante (Consum max W)</div>
     <div id="printersSettingsList"></div>
 
-    <button class="btn-save" id="btnSave" onclick="saveSettings()">&#x1F4BE; Salvează Setările</button>
-    <button class="btn-reset-settings" id="btnResetSettings" onclick="resetDefaultSettings()">&#x21A9;&#xFE0F; Revino la setările implicite (RON)</button>
+    <button class="btn-save" id="btnSave" onclick="saveSettings()">💾 Salvează Setările</button>
+    <button class="btn-reset-settings" id="btnResetSettings" onclick="resetDefaultSettings()">↩️ Revino la setările implicite (RON)</button>
   </div>
 
+  <!-- HISTORY PANEL -->
+  <div class="card no-print" id="historyPanel">
+    <div class="card-title" id="lblHistoryTitle">Istoric Oferte Salvate</div>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- SEC 1 -->
   <div class="card no-print">
-    <p class="card-title" id="lblSec1">1. Imprimantă, Material & Timp</p>
-    <div class="grid-2-pm" style="margin-bottom: 10px;">
+    <div class="card-title" id="lblSec1">1. Proiect, Imprimantă & Timp</div>
+    <div class="grid-proj">
+      <div>
+        <label id="lblProjName">Nume Proiect / Piesă (opțional)</label>
+        <input type="text" id="projectName" placeholder="Ex: Suport perete..." />
+      </div>
+      <div>
+        <label id="lblQty">Cantitate (buc.)</label>
+        <input type="number" id="projectQty" value="1" min="1" oninput="calculate()" />
+      </div>
+    </div>
+    
+    <div class="grid-2-pm">
       <div>
         <label id="lblPrinter">Imprimantă</label>
         <select id="printerSelect" onchange="calculate()"></select>
@@ -230,9 +276,10 @@
         </select>
       </div>
     </div>
-    <div class="grid-2" style="margin-bottom: 10px;">
+    
+    <div class="grid-2" style="margin-top:10px;">
       <div>
-        <label id="lblHours">Ore</label>
+        <label id="lblHours">Ore (total print)</label>
         <input type="number" id="printHours" placeholder="0" step="1" min="0" oninput="calculate()" />
       </div>
       <div>
@@ -240,28 +287,21 @@
         <input type="number" id="printMinutes" placeholder="0" step="1" min="0" max="59" oninput="calculate()" />
       </div>
     </div>
-    <div class="info-pill">
-      <span id="infoPriceKg">Preț/kg: 60 RON</span>
-      <span id="infoWatts">Max: 150 W</span>
-      <span id="infoKwh">Curent: 1.5 RON/kWh</span>
-    </div>
+    <div class="info-pill" id="infoPill"></div>
   </div>
 
-  <!-- SECTIUNEA 2: LAYERE & PIERDERE PE FIECARE RAND -->
+  <!-- SEC 2 -->
   <div class="card no-print">
-    <p class="card-title" id="lblSec2">2. Culori & Layere (Grame)</p>
-
+    <div class="card-title" id="lblSec2">2. Culori & Layere (Grame)</div>
     <div id="layersContainer"></div>
-
-    <button type="button" class="btn-add-layer" id="btnAddLayer" onclick="addLayer()">
-      <span>+</span> <span id="lblAddLayerText">Adaugă Culoare / Layer</span>
-    </button>
+    <button type="button" class="btn-add-layer" onclick="addLayer()">＋ <span id="lblAddLayerText">Adaugă Culoare / Layer</span></button>
   </div>
 
+  <!-- SEC 3 -->
   <div class="card no-print">
-    <p class="card-title" id="lblSec3">3. Opțiuni TVA</p>
+    <div class="card-title" id="lblSec3">3. Opțiuni TVA</div>
     <div class="switch-row">
-      <span style="font-size: 0.95rem;" id="lblIncludeTva">Include TVA</span>
+      <span id="lblIncludeTva">Include TVA</span>
       <label class="switch">
         <input type="checkbox" id="tvaToggle" onchange="calculate()" />
         <span class="slider"></span>
@@ -269,239 +309,216 @@
     </div>
     <div id="tvaRateRow" style="display: none; margin-top: 10px;">
       <label id="lblTvaRate">Cotă TVA (%)</label>
-      <input type="number" id="tvaRate" value="19" step="1" min="0" oninput="calculate()" />
+      <input type="number" id="tvaRate" value="21" step="1" min="0" oninput="calculate()" />
     </div>
   </div>
 
+  <!-- SEC 4 -->
   <div class="card no-print">
-    <p class="card-title" id="lblSec4">Rezultat Ofertă</p>
-    <div class="summary-line">
-      <span id="lblResMat">Material Total:</span>
-      <strong id="resTotalGrams">0 g</strong>
-    </div>
-    <div class="summary-line">
-      <span id="lblResTime">Timp Total:</span>
-      <strong id="resTotalTime">0h 0m</strong>
-    </div>
-    <div class="summary-line">
-      <span id="lblResProd">Cost Producție:</span>
-      <span id="resProdCost">0.00 RON</span>
-    </div>
-    <div class="summary-line">
-      <span id="lblResBase">Valoare Ofertă (fără TVA):</span>
-      <strong id="resBaseOffer">0.00 RON</strong>
-    </div>
-    <div class="summary-line" id="resTvaLine" style="display: none;">
-      <span id="resTvaLabel">TVA (19%):</span>
-      <span id="resTvaVal">0.00 RON</span>
-    </div>
-
+    <div class="card-title" id="lblSec4">Rezultat Ofertă</div>
+    <div class="summary-line"><span id="lblResMat">Material Total:</span><strong id="resTotalGrams">0 g</strong></div>
+    <div class="summary-line"><span id="lblResTime">Timp Total:</span><strong id="resTotalTime">0h 0m</strong></div>
+    <div class="summary-line"><span id="lblResProd">Cost Producție:</span><strong id="resProdCost">0.00 RON</strong></div>
+    <div class="summary-line"><span id="lblResLabor">Manoperă / Pregătire:</span><strong id="resLaborCost">0.00 RON</strong></div>
+    <div class="summary-line"><span id="lblResBase">Valoare Ofertă (fără TVA):</span><strong id="resBaseOffer">0.00 RON</strong></div>
+    <div class="summary-line" id="resTvaLine" style="display: none;"><span id="resTvaLabel">TVA (21%):</span><strong id="resTvaVal">0.00 RON</strong></div>
+    
     <div class="total-box">
-      <span class="total-label" id="lblFinalPrice">Preț de Vânzare</span>
-      <span class="total-price" id="resFinalPrice">0.00 RON</span>
+      <div>
+        <div class="total-label" id="lblFinalPrice">Preț de Vânzare</div>
+        <div class="total-sub" id="resUnitPrice">0.00 RON / buc.</div>
+      </div>
+      <div class="total-price" id="resFinalPrice">0.00 RON</div>
     </div>
-
-    <div class="action-buttons">
-      <button class="btn-print" id="btnPrint" onclick="printQuote()">&#x1F5A8;&#xFE0F; Print / PDF</button>
-      <button class="btn-reset" id="btnReset" onclick="resetForm()">&#x1F504; RESET</button>
+    
+    <div class="action-buttons-3 no-print">
+      <button class="btn-act btn-wa" id="btnWa" onclick="sendWhatsApp()">📋 WhatsApp</button>
+      <button class="btn-act btn-print" id="btnPrint" onclick="printQuote()">🖨️ PDF / Print</button>
+      <button class="btn-act btn-save-quote" id="btnSaveQuote" onclick="saveQuote()">⭐ Salvează</button>
+    </div>
+    <div class="action-buttons-2 no-print">
+      <button class="btn-act btn-reset" id="btnReset" onclick="resetForm()">🔄 RESETEAZĂ CALCULUL</button>
     </div>
   </div>
 
+  <div class="bmc-footer no-print">
+    <p class="bmc-text" id="lblBmcFooter">Calculatoarele te ajută să îți crești afacerea 3D?</p>
+    <a class="btn-bmc"
+   id="btnBmcFooter"
+   href="https://buymeacoffee.com/VRG.FAV"
+   target="_blank"
+   rel="noopener noreferrer">
+
+   ☕ Susține proiectul (5€)
+
+</a>
+  </div>
+
+  <!-- PRINT SHEET -->
   <div id="printSheet">
     <div class="print-header">
-      <h2 class="print-title" id="pTitle">Ofertă Printare 3D</h2>
-      <span class="print-date" id="pDate"></span>
+      <div>
+        <h1 class="print-title" id="pTitle">Ofertă Printare 3D</h1>
+        <div class="print-studio" id="pStudio"></div>
+        <div class="print-studio" id="pContact"></div>
+      </div>
+      <div class="print-date" id="pDate"></div>
     </div>
-    <div class="print-row">
-      <span id="pLblPrinter">Imprimantă:</span>
-      <strong id="pValPrinter">A1 mini</strong>
-    </div>
-    <div class="print-row">
-      <span id="pLblMat">Material:</span>
-      <strong id="pValMat">PLA</strong>
-    </div>
-    <div class="print-row" id="pRowColors">
-      <span id="pLblColors">Culori / Layere:</span>
-      <span id="pValColors">-</span>
-    </div>
-    <div class="print-row">
-      <span id="pLblNet">Preț (fără TVA):</span>
-      <strong id="pValNet">0.00 RON</strong>
-    </div>
-    <div class="print-row" id="pRowTva" style="display: none;">
-      <span id="pLblTva">TVA (19%):</span>
-      <strong id="pValTva">0.00 RON</strong>
-    </div>
-    <div class="print-total">
-      <span id="pLblTotal">Preț Final:</span>
-      <span id="pValTotal">0.00 RON</span>
-    </div>
+    <div class="print-row"><span id="pLblProject">Proiect / Piesă:</span><strong id="pProject">-</strong></div>
+    <div class="print-row"><span id="pLblQty">Cantitate:</span><strong id="pQty">1 buc.</strong></div>
+    <div class="print-row"><span id="pLblPrinter">Imprimantă:</span><strong id="pValPrinter">-</strong></div>
+    <div class="print-row"><span id="pLblMat">Material:</span><strong id="pValMat">-</strong></div>
+    <div class="print-row" id="pRowColors"><span id="pLblColors">Culori / Layere:</span><strong id="pValColors">-</strong></div>
+    <div class="print-row"><span id="pLblNet">Preț (fără TVA):</span><strong id="pValNet">0.00 RON</strong></div>
+    <div class="print-row" id="pRowTva" style="display: none;"><span id="pLblTva">TVA (21%):</span><strong id="pValTva">0.00 RON</strong></div>
+    <div class="print-row"><span id="pLblUnit">Preț / bucată:</span><strong id="pValUnit">0.00 RON</strong></div>
+    <div class="print-total"><span id="pLblTotal">Preț Final:</span><span id="pValTotal">0.00 RON</span></div>
+    <div class="print-note" id="pNote">Ofertă generată cu 3D Print Quote Pro. Valabilă 15 zile.</div>
   </div>
 
-  <script>
-    const STORAGE_KEY = "calc3d_v8";
+  <div id="toast"></div>
 
+  <script>
+    // Am schimbat cheile de stocare pentru a forta browserul sa ignore datele vechi corupte
+    const STORAGE_KEY = "calc3d_pro_v2_fixed";
+    const HISTORY_KEY = "calc3d_pro_history_v2_fixed";
+    
     const COLORS_LIST = [
-      { ro: "Gri", en: "Grey" },
-      { ro: "Alb", en: "White" },
-      { ro: "Negru", en: "Black" },
-      { ro: "Roșu", en: "Red" },
-      { ro: "Galben", en: "Yellow" },
-      { ro: "Albastru", en: "Blue" },
-      { ro: "Verde", en: "Green" },
-      { ro: "Portocaliu", en: "Orange" },
-      { ro: "Mov", en: "Purple" },
-      { ro: "Roz", en: "Pink" },
-      { ro: "Maro", en: "Brown" },
-      { ro: "Bej", en: "Beige" },
-      { ro: "Auriu", en: "Gold" },
-      { ro: "Argintiu", en: "Silver" },
-      { ro: "Transparent", en: "Transparent" },
-      { ro: "Fosforescent", en: "Glow-in-the-dark" }
+      { ro: "Gri", en: "Grey" }, { ro: "Alb", en: "White" }, { ro: "Negru", en: "Black" },
+      { ro: "Roșu", en: "Red" }, { ro: "Galben", en: "Yellow" }, { ro: "Albastru", en: "Blue" },
+      { ro: "Verde", en: "Green" }, { ro: "Portocaliu", en: "Orange" }, { ro: "Mov", en: "Purple" },
+      { ro: "Roz", en: "Pink" }, { ro: "Maro", en: "Brown" }, { ro: "Bej", en: "Beige" },
+      { ro: "Auriu", en: "Gold" }, { ro: "Argintiu", en: "Silver" },
+      { ro: "Transparent", en: "Transparent" }, { ro: "Fosforescent", en: "Glow-in-the-dark" }
     ];
 
     const I18N = {
       ro: {
-        settingsBtn: "\u2699\uFE0F Set\u0103ri",
-        settingsTitle: "Set\u0103ri Materiale, Imprimante, Adaos & Moned\u0103",
-        setKwh: "Pre\u021b curent (kWh)",
-        setMarkup: "Adaos (multiplicator, ex: 2)",
-        setCurrency: "Moned\u0103 (ex: RON, EUR, USD)",
-        colMat: "Material",
-        colPrice: "Pre\u021b / kg",
-        colPrinter: "Imprimant\u0103",
-        colWatts: "Consum max (W)",
-        btnSave: "\uD83D\uDCBE Salveaz\u0103 Set\u0103rile",
-        btnResetSettings: "\u21A9\uFE0F Revino la set\u0103rile implicite (RON)",
-        sec1: "1. Imprimant\u0103, Material & Timp",
-        printer: "Imprimant\u0103",
-        mat: "Material",
-        hours: "Ore",
-        minutes: "Minute",
-        infoPrice: "Pre\u021b/kg",
-        infoMax: "Max",
-        infoKwh: "Curent",
-        sec2: "2. Culori & Layere (Grame)",
-        addLayerText: "Adaug\u0103 Culoare / Layer",
-        miniColor: "Culoare",
-        miniGrams: "Grame",
-        miniWaste: "Pierdere (g)",
-        sec3: "3. Op\u021biuni TVA",
-        includeTva: "Include TVA",
-        tvaRate: "Cot\u0103 TVA (%)",
-        sec4: "Rezultat Ofert\u0103",
-        resMat: "Material Total:",
-        resTime: "Timp Total:",
-        resProd: "Cost Produc\u021bie:",
-        resBase: "Valoare Ofert\u0103 (f\u0103r\u0103 TVA):",
-        finalPrice: "Pre\u021b de V\u00e2nzare",
-        btnPrint: "\uD83D\uDDA8\uFE0F Print / PDF",
-        btnReset: "\uD83D\uDD04 RESET",
-        pTitle: "Ofert\u0103 Printare 3D",
-        pLblPrinter: "Imprimant\u0103:",
-        pLblMat: "Material:",
-        pLblColors: "Culori / Layere:",
-        pLblNet: "Pre\u021b (f\u0103r\u0103 TVA):",
-        pLblTotal: "Pre\u021b Final:"
+        historyBtn: "📂 Istoric", historyTitle: "Istoric Oferte Salvate",
+        historyEmpty: "Nu ai nicio ofertă salvată încă.", loadBtn: "Încarcă",
+        settingsBtn: "⚙️ Setări", settingsTitle: "Setări Atelier, Costuri & Imprimante",
+        setStudio: "Nume Atelier / Firma (PDF)", setContact: "Telefon / Email (PDF)",
+        setKwh: "Preț curent (kWh)", setMarkup: "Adaos (multiplicator, ex: 2)",
+        setWear: "Uzură imprimantă / oră", setLabor: "Manoperă / pregătire (fix)",
+        setCurrency: "Monedă (ex: RON, EUR, USD)", colMat: "Material", colPrice: "Preț / kg",
+        colPrinter: "Imprimantă", colWatts: "Consum max (W)",
+        btnSave: "💾 Salvează Setările", btnResetSettings: "↩️ Revino la setările implicite (RON)",
+        sec1: "1. Proiect, Imprimantă & Timp", projName: "Nume Proiect / Piesă (opțional)",
+        projPlaceholder: "Ex: Suport perete, Carcasă...", qty: "Cantitate (buc.)",
+        printer: "Imprimantă", mat: "Material", hours: "Ore (total print)", minutes: "Minute",
+        infoPrice: "Preț/kg", infoMax: "Max", infoKwh: "Curent",
+        sec2: "2. Culori & Layere (Grame)", addLayerText: "Adaugă Culoare / Layer",
+        miniColor: "Culoare", miniGrams: "Grame", miniWaste: "Pierdere (g)",
+        sec3: "3. Opțiuni TVA", includeTva: "Include TVA", tvaRate: "Cotă TVA (%)",
+        sec4: "Rezultat Ofertă", resMat: "Material Total:", resTime: "Timp Total:",
+        resProd: "Cost Producție:", resLabor: "Manoperă / Pregătire:",
+        resBase: "Valoare Ofertă (fără TVA):", finalPrice: "Preț de Vânzare",
+        unitSuffix: "buc.", btnWa: "📋 WhatsApp", btnPrint: "🖨️ PDF / Print",
+        btnSaveQuote: "⭐ Salvează", btnReset: "🔄 RESETEAZĂ CALCULUL",
+        pTitle: "Ofertă Printare 3D", pLblProject: "Proiect / Piesă:", pLblQty: "Cantitate:",
+        pLblPrinter: "Imprimantă:", pLblMat: "Material:", pLblColors: "Culori / Layere:",
+        pLblNet: "Preț (fără TVA):", pLblUnit: "Preț / bucată:", pLblTotal: "Preț Final:",
+        pNote: "Ofertă generată cu 3D Print Quote Pro. Valabilă 15 zile.",
+        bmcFooter: "Calculatoarele te ajută să îți crești afacerea 3D?", bmcBtn: "☕ Susține proiectul (5€)",
+        toastWa: "Ofertă copiată pentru WhatsApp!", toastSaved: "Ofertă salvată în Istoric!",
+        toastSettings: "Setări salvate!"
       },
       en: {
-        settingsBtn: "\u2699\uFE0F Settings",
-        settingsTitle: "Materials, Printers, Markup & Currency Settings",
-        setKwh: "Electricity price (kWh)",
-        setMarkup: "Markup (multiplier, e.g. 2)",
-        setCurrency: "Currency (e.g. RON, EUR, USD)",
-        colMat: "Material",
-        colPrice: "Price / kg",
-        colPrinter: "Printer",
-        colWatts: "Max Power (W)",
-        btnSave: "\uD83D\uDCBE Save Settings",
-        btnResetSettings: "\u21A9\uFE0F Reset to default settings (RON)",
-        sec1: "1. Printer, Material & Time",
-        printer: "Printer",
-        mat: "Material",
-        hours: "Hours",
-        minutes: "Minutes",
-        infoPrice: "Price/kg",
-        infoMax: "Max",
-        infoKwh: "Energy",
-        sec2: "2. Colors & Layers (Grams)",
-        addLayerText: "Add Color / Layer",
-        miniColor: "Color",
-        miniGrams: "Grams",
-        miniWaste: "Waste (g)",
-        sec3: "3. VAT Options",
-        includeTva: "Include VAT",
-        tvaRate: "VAT Rate (%)",
-        sec4: "Quote Summary",
-        resMat: "Total Material:",
-        resTime: "Total Time:",
-        resProd: "Production Cost:",
-        resBase: "Quote Value (excl. VAT):",
-        finalPrice: "Selling Price",
-        btnPrint: "\uD83D\uDDA8\uFE0F Print / PDF",
-        btnReset: "\uD83D\uDD04 RESET",
-        pTitle: "3D Printing Quote",
-        pLblPrinter: "Printer:",
-        pLblMat: "Material:",
-        pLblColors: "Colors / Layers:",
-        pLblNet: "Price (excl. VAT):",
-        pLblTotal: "Final Price:"
+        historyBtn: "📂 History", historyTitle: "Saved Quotes History",
+        historyEmpty: "No saved quotes yet.", loadBtn: "Load",
+        settingsBtn: "⚙️ Settings", settingsTitle: "Workshop, Costs & Printers Settings",
+        setStudio: "Studio / Company Name (PDF)", setContact: "Phone / Email (PDF)",
+        setKwh: "Electricity price (kWh)", setMarkup: "Markup (multiplier, e.g. 2)",
+        setWear: "Printer wear / hour", setLabor: "Labor / setup fee (fixed)",
+        setCurrency: "Currency (e.g. RON, EUR, USD)", colMat: "Material", colPrice: "Price / kg",
+        colPrinter: "Printer", colWatts: "Max Power (W)",
+        btnSave: "💾 Save Settings", btnResetSettings: "↩️ Reset to default settings (RON)",
+        sec1: "1. Project, Printer & Time", projName: "Project / Part Name (optional)",
+        projPlaceholder: "E.g. Wall mount, Enclosure...", qty: "Quantity (pcs)",
+        printer: "Printer", mat: "Material", hours: "Hours (total print)", minutes: "Minutes",
+        infoPrice: "Price/kg", infoMax: "Max", infoKwh: "Energy",
+        sec2: "2. Colors & Layers (Grams)", addLayerText: "Add Color / Layer",
+        miniColor: "Color", miniGrams: "Grams", miniWaste: "Waste (g)",
+        sec3: "3. VAT Options", includeTva: "Include VAT", tvaRate: "VAT Rate (%)",
+        sec4: "Quote Summary", resMat: "Total Material:", resTime: "Total Time:",
+        resProd: "Production Cost:", resLabor: "Labor / Setup Fee:",
+        resBase: "Quote Value (excl. VAT):", finalPrice: "Selling Price",
+        unitSuffix: "pc.", btnWa: "📋 WhatsApp", btnPrint: "🖨️ PDF / Print",
+        btnSaveQuote: "⭐ Save", btnReset: "🔄 RESET CALCULATION",
+        pTitle: "3D Printing Quote", pLblProject: "Project / Part:", pLblQty: "Quantity:",
+        pLblPrinter: "Printer:", pLblMat: "Material:", pLblColors: "Colors / Layers:",
+        pLblNet: "Price (excl. VAT):", pLblUnit: "Price / unit:", pLblTotal: "Final Price:",
+        pNote: "Quote generated with 3D Print Quote Pro. Valid for 15 days.",
+        bmcFooter: "Does this calculator help grow your 3D business?", bmcBtn: "☕ Support the project (5€)",
+        toastWa: "Quote copied for WhatsApp!", toastSaved: "Quote saved to History!",
+        toastSettings: "Settings saved!"
       }
     };
 
     const DEFAULT_CONFIG = {
-      lang: "ro",
-      currency: "RON",
-      kwhPrice: 1.5,
-      defaultMarkup: 2,
+      lang: "ro", studioName: "", studioContact: "", currency: "RON",
+      kwhPrice: 1.5, defaultMarkup: 2, wearPerHour: 0, laborFixed: 0,
       materials: {
-        "ASA":   { priceKg: 180 },
-        "ABS":   { priceKg: 60 },
-        "PLA":   { priceKg: 60 },
-        "PET-G": { priceKg: 60 },
-        "TPU":   { priceKg: 180 }
+        "ASA": { priceKg: 180 }, "ABS": { priceKg: 60 }, "PLA": { priceKg: 60 },
+        "PET-G": { priceKg: 60 }, "TPU": { priceKg: 180 }
       },
       printers: {
-        "Bambu Lab A1 mini": { maxWatts: 150 },
-        "Bambu Lab A1":      { maxWatts: 1300 },
-        "Bambu Lab A2L":     { maxWatts: 1000 },
-        "Bambu Lab P1P":     { maxWatts: 1000 },
-        "Bambu Lab P1S":     { maxWatts: 1000 },
-        "Bambu Lab P2S":     { maxWatts: 1200 },
-        "Bambu Lab X1C":     { maxWatts: 1000 },
-        "Bambu Lab X1E":     { maxWatts: 1350 },
-        "Bambu Lab X2D":     { maxWatts: 1600 },
-        "Bambu Lab H2S / H2D / H2C": { maxWatts: 1800 }
+        "Bambu Lab A1 mini": { maxWatts: 150 }, "Bambu Lab A1": { maxWatts: 1300 },
+        "Bambu Lab A2L": { maxWatts: 1000 }, "Bambu Lab P1P": { maxWatts: 1000 },
+        "Bambu Lab P1S": { maxWatts: 1000 }, "Bambu Lab P2S": { maxWatts: 1200 },
+        "Bambu Lab X1C": { maxWatts: 1000 }, "Bambu Lab X1E": { maxWatts: 1350 },
+        "Bambu Lab X2D": { maxWatts: 1600 }, "Bambu Lab H2S / H2D / H2C": { maxWatts: 1800 }
       }
     };
 
     let config = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-    if (!config.printers) {
-      config.printers = JSON.parse(JSON.stringify(DEFAULT_CONFIG.printers));
-    }
+    if (!config.printers) config.printers = JSON.parse(JSON.stringify(DEFAULT_CONFIG.printers));
+    if (typeof config.wearPerHour === "undefined") config.wearPerHour = 0;
+    if (typeof config.laborFixed === "undefined") config.laborFixed = 0;
+    
+    let historyData = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
     let layerCount = 0;
+    let lastCalcData = {};
 
     function init() {
       populatePrinterSelect();
       applyLanguage();
       renderSettings();
+      updateHistoryBadge();
       addLayer(0, "", "");
       calculate();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => { toast.style.display = "none"; }, 2400);
     }
 
     function populatePrinterSelect() {
       const sel = document.getElementById("printerSelect");
       const currentVal = sel.value;
       sel.innerHTML = "";
+      
+      let hasSelected = false;
       Object.keys(config.printers).forEach((name, idx) => {
         const opt = document.createElement("option");
         opt.value = name;
         opt.textContent = name;
-        if ((currentVal && name === currentVal) || (!currentVal && idx === 0)) {
+        if (currentVal && name === currentVal) {
+          opt.selected = true;
+          hasSelected = true;
+        } else if (!currentVal && idx === 0) {
           opt.selected = true;
         }
         sel.appendChild(opt);
       });
+      
+      if (currentVal && !hasSelected) {
+        sel.selectedIndex = 0;
+      }
     }
 
     function getColorOptionsHTML(selectedIndex = 0) {
@@ -516,15 +533,13 @@
       const container = document.getElementById("layersContainer");
       const isFirst = container.children.length === 0;
       const rowId = `layerRow_${layerCount}`;
-
       const row = document.createElement("div");
       row.className = "layer-row";
       row.id = rowId;
-
-      const removeBtnHTML = isFirst
-        ? ""
-        : `<button type="button" class="btn-remove-layer" onclick="removeLayer('${rowId}')">&#x2715;</button>`;
-
+      
+      const removeBtnHTML = isFirst ? "" :
+        `<button type="button" class="btn-remove-layer" onclick="removeLayer('${rowId}')">✕</button>`;
+        
       row.innerHTML = `
         <div class="layer-col-color">
           <span class="mini-label lbl-mini-color">${t.miniColor}</span>
@@ -538,44 +553,46 @@
           <span class="mini-label lbl-mini-waste">${t.miniWaste}</span>
           <input type="number" class="layer-waste" placeholder="0 g" step="1" min="0" value="${defaultWaste}" oninput="calculate()" />
         </div>
-        ${removeBtnHTML}
-      `;
-
+        ${removeBtnHTML}`;
+        
       container.appendChild(row);
       calculate();
     }
 
     function removeLayer(rowId) {
       const row = document.getElementById(rowId);
-      if (row) {
-        row.remove();
-        calculate();
-      }
+      if (row) { row.remove(); calculate(); }
     }
 
     function toggleSettings() {
+      document.getElementById("historyPanel").style.display = "none";
       const panel = document.getElementById("settingsPanel");
       panel.style.display = panel.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleHistory() {
+      document.getElementById("settingsPanel").style.display = "none";
+      const panel = document.getElementById("historyPanel");
+      const isOpening = panel.style.display !== "block";
+      panel.style.display = isOpening ? "block" : "none";
+      if (isOpening) renderHistory();
     }
 
     function toggleLang() {
       config.lang = config.lang === "ro" ? "en" : "ro";
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-
       const currentLayers = Array.from(document.querySelectorAll(".layer-row")).map(row => ({
         colorIdx: parseInt(row.querySelector(".layer-color").value),
         grams: row.querySelector(".layer-grams").value,
         waste: row.querySelector(".layer-waste").value
       }));
-
       applyLanguage();
-
       document.querySelectorAll(".layer-row").forEach((row, index) => {
         const sel = row.querySelector(".layer-color");
         const selectedVal = currentLayers[index] ? currentLayers[index].colorIdx : 0;
         sel.innerHTML = getColorOptionsHTML(selectedVal);
       });
-
+      renderSettings();
       calculate();
     }
 
@@ -583,48 +600,71 @@
       const t = I18N[config.lang];
       document.getElementById("langBtn").textContent = config.lang === "ro" ? "EN" : "RO";
       document.getElementById("settingsBtn").textContent = t.settingsBtn;
-      document.getElementById("lblSettingsTitle").textContent = t.settingsTitle;
-      document.getElementById("lblSetKwh").textContent = t.setKwh;
-      document.getElementById("lblSetMarkup").textContent = t.setMarkup;
-      document.getElementById("lblSetCurrency").textContent = t.setCurrency;
-      document.getElementById("lblColMat").textContent = t.colMat;
-      document.getElementById("lblColPrice").textContent = t.colPrice;
-      document.getElementById("lblColPrinter").textContent = t.colPrinter;
-      document.getElementById("lblColWatts").textContent = t.colWatts;
-      document.getElementById("btnSave").textContent = t.btnSave;
-      document.getElementById("btnResetSettings").textContent = t.btnResetSettings;
-      document.getElementById("lblSec1").textContent = t.sec1;
-      document.getElementById("lblPrinter").textContent = t.printer;
-      document.getElementById("lblMat").textContent = t.mat;
-      document.getElementById("lblHours").textContent = t.hours;
-      document.getElementById("lblMinutes").textContent = t.minutes;
-      document.getElementById("lblSec2").textContent = t.sec2;
-      document.getElementById("lblAddLayerText").textContent = t.addLayerText;
+      updateHistoryBadge();
+      
+      const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+      
+      setText("lblHistoryTitle", t.historyTitle);
+      setText("lblSettingsTitle", t.settingsTitle);
+      setText("lblSetStudio", t.setStudio);
+      setText("lblSetContact", t.setContact);
+      setText("lblSetKwh", t.setKwh);
+      setText("lblSetMarkup", t.setMarkup);
+      setText("lblSetWear", t.setWear);
+      setText("lblSetLabor", t.setLabor);
+      setText("lblSetCurrency", t.setCurrency);
+      setText("lblColMat", t.colMat);
+      setText("lblColPrinter", t.colPrinter);
+      setText("btnSave", t.btnSave);
+      setText("btnResetSettings", t.btnResetSettings);
+      setText("lblSec1", t.sec1);
+      setText("lblProjName", t.projName);
+      document.getElementById("projectName").placeholder = t.projPlaceholder;
+      setText("lblQty", t.qty);
+      setText("lblPrinter", t.printer);
+      setText("lblMat", t.mat);
+      setText("lblHours", t.hours);
+      setText("lblMinutes", t.minutes);
+      setText("lblSec2", t.sec2);
+      setText("lblAddLayerText", t.addLayerText);
       document.querySelectorAll(".lbl-mini-color").forEach(el => el.textContent = t.miniColor);
       document.querySelectorAll(".lbl-mini-grams").forEach(el => el.textContent = t.miniGrams);
       document.querySelectorAll(".lbl-mini-waste").forEach(el => el.textContent = t.miniWaste);
-      document.getElementById("lblSec3").textContent = t.sec3;
-      document.getElementById("lblIncludeTva").textContent = t.includeTva;
-      document.getElementById("lblTvaRate").textContent = t.tvaRate;
-      document.getElementById("lblSec4").textContent = t.sec4;
-      document.getElementById("lblResMat").textContent = t.resMat;
-      document.getElementById("lblResTime").textContent = t.resTime;
-      document.getElementById("lblResProd").textContent = t.resProd;
-      document.getElementById("lblResBase").textContent = t.resBase;
-      document.getElementById("lblFinalPrice").textContent = t.finalPrice;
-      document.getElementById("btnPrint").textContent = t.btnPrint;
-      document.getElementById("btnReset").textContent = t.btnReset;
-      document.getElementById("pTitle").textContent = t.pTitle;
-      document.getElementById("pLblPrinter").textContent = t.pLblPrinter;
-      document.getElementById("pLblMat").textContent = t.pLblMat;
-      document.getElementById("pLblColors").textContent = t.pLblColors;
-      document.getElementById("pLblNet").textContent = t.pLblNet;
-      document.getElementById("pLblTotal").textContent = t.pLblTotal;
+      setText("lblSec3", t.sec3);
+      setText("lblIncludeTva", t.includeTva);
+      setText("lblTvaRate", t.tvaRate);
+      setText("lblSec4", t.sec4);
+      setText("lblResMat", t.resMat);
+      setText("lblResTime", t.resTime);
+      setText("lblResProd", t.resProd);
+      setText("lblResLabor", t.resLabor);
+      setText("lblResBase", t.resBase);
+      setText("lblFinalPrice", t.finalPrice);
+      setText("btnWa", t.btnWa);
+      setText("btnPrint", t.btnPrint);
+      setText("btnSaveQuote", t.btnSaveQuote);
+      setText("btnReset", t.btnReset);
+      setText("pTitle", t.pTitle);
+      setText("pLblProject", t.pLblProject);
+      setText("pLblQty", t.pLblQty);
+      setText("pLblPrinter", t.pLblPrinter);
+      setText("pLblMat", t.pLblMat);
+      setText("pLblColors", t.pLblColors);
+      setText("pLblNet", t.pLblNet);
+      setText("pLblUnit", t.pLblUnit);
+      setText("pLblTotal", t.pLblTotal);
+      setText("pNote", t.pNote);
+      setText("lblBmcFooter", t.bmcFooter);
+      setText("btnBmcFooter", t.bmcBtn);
     }
 
     function renderSettings() {
+      document.getElementById("setStudio").value = config.studioName || "";
+      document.getElementById("setContact").value = config.studioContact || "";
       document.getElementById("setKwh").value = config.kwhPrice;
       document.getElementById("setMarkup").value = config.defaultMarkup;
+      document.getElementById("setWear").value = config.wearPerHour;
+      document.getElementById("setLabor").value = config.laborFixed;
       document.getElementById("setCurrency").value = config.currency;
 
       const matList = document.getElementById("materialsSettingsList");
@@ -632,10 +672,7 @@
       Object.keys(config.materials).forEach(mat => {
         const row = document.createElement("div");
         row.className = "settings-grid-2";
-        row.innerHTML = `
-          <span>${mat}</span>
-          <input type="number" id="matPrice_${mat}" value="${config.materials[mat].priceKg}" step="1" />
-        `;
+        row.innerHTML = `<span>${mat}</span><input type="number" id="matPrice_${mat}" value="${config.materials[mat].priceKg}" step="1" />`;
         matList.appendChild(row);
       });
 
@@ -644,17 +681,19 @@
       Object.keys(config.printers).forEach((name, idx) => {
         const row = document.createElement("div");
         row.className = "settings-grid-2";
-        row.innerHTML = `
-          <span>${name}</span>
-          <input type="number" id="prtWatts_${idx}" value="${config.printers[name].maxWatts}" step="10" />
-        `;
+        row.innerHTML = `<span>${name}</span><input type="number" id="prtWatts_${idx}" value="${config.printers[name].maxWatts}" step="10" />`;
         prtList.appendChild(row);
       });
     }
 
     function saveSettings() {
+      const t = I18N[config.lang];
+      config.studioName = document.getElementById("setStudio").value.trim();
+      config.studioContact = document.getElementById("setContact").value.trim();
       config.kwhPrice = parseFloat(document.getElementById("setKwh").value) || 1.5;
       config.defaultMarkup = parseFloat(document.getElementById("setMarkup").value) || 2;
+      config.wearPerHour = parseFloat(document.getElementById("setWear").value) || 0;
+      config.laborFixed = parseFloat(document.getElementById("setLabor").value) || 0;
       config.currency = document.getElementById("setCurrency").value.trim() || "RON";
 
       Object.keys(config.materials).forEach(mat => {
@@ -671,10 +710,13 @@
       populatePrinterSelect();
       toggleSettings();
       calculate();
+      showToast(t.toastSettings);
     }
 
     function resetDefaultSettings() {
+      const currentLang = config.lang;
       config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+      config.lang = currentLang;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
       populatePrinterSelect();
       renderSettings();
@@ -684,22 +726,23 @@
 
     function calculate() {
       const t = I18N[config.lang];
+      const projectName = document.getElementById("projectName").value.trim();
+      const qty = Math.max(1, parseInt(document.getElementById("projectQty").value) || 1);
       const printerName = document.getElementById("printerSelect").value;
-      const printerConf = config.printers[printerName] || { maxWatts: 150 };
       const mat = document.getElementById("materialSelect").value;
       const matConf = config.materials[mat] || { priceKg: 60 };
+      const printerConf = config.printers[printerName] || { maxWatts: 150 };
 
-      document.getElementById("infoPriceKg").textContent = `${t.infoPrice}: ${matConf.priceKg} ${config.currency}`;
-      document.getElementById("infoWatts").textContent = `${t.infoMax}: ${printerConf.maxWatts} W`;
-      document.getElementById("infoKwh").textContent = `${t.infoKwh}: ${config.kwhPrice} ${config.currency}/kWh`;
+      document.getElementById("infoPill").innerHTML = 
+        `<span>${t.infoPrice}: ${matConf.priceKg} ${config.currency}</span>` +
+        `<span>${t.infoMax}: ${printerConf.maxWatts} W</span>` +
+        `<span>${t.infoKwh}: ${config.kwhPrice} ${config.currency}/kWh</span>`;
 
       const h = parseInt(document.getElementById("printHours").value) || 0;
       const m = parseInt(document.getElementById("printMinutes").value) || 0;
       const totalHoursDecimal = h + (m / 60);
 
-      let gramsLayers = 0;
-      let gramsWaste = 0;
-      let colorsUsedList = [];
+      let gramsLayers = 0, gramsWaste = 0, colorsUsedList = [];
 
       document.querySelectorAll(".layer-row").forEach(row => {
         const cIdx = parseInt(row.querySelector(".layer-color").value);
@@ -709,19 +752,22 @@
           gramsLayers += g;
           colorsUsedList.push(`${COLORS_LIST[cIdx][config.lang]} (${g}g)`);
         }
-        if (w > 0) {
-          gramsWaste += w;
-        }
+        if (w > 0) gramsWaste += w;
       });
 
       const totalGrams = gramsLayers + gramsWaste;
 
+      // Costuri
       const costMaterial = (totalGrams / 1000) * matConf.priceKg;
       const costElectricity = (printerConf.maxWatts / 1000) * totalHoursDecimal * config.kwhPrice;
-      const costProduction = costMaterial + costElectricity;
+      const wearCost = config.wearPerHour * totalHoursDecimal;
+      const costProduction = costMaterial + costElectricity + wearCost;
+      const laborCost = config.laborFixed;
 
-      const baseOffer = costProduction * config.defaultMarkup;
+      // Adaos (Markup)
+      const baseOffer = (costProduction + laborCost) * config.defaultMarkup;
 
+      // TVA
       const tvaActive = document.getElementById("tvaToggle").checked;
       const tvaRateRow = document.getElementById("tvaRateRow");
       const resTvaLine = document.getElementById("resTvaLine");
@@ -731,7 +777,7 @@
       if (tvaActive) {
         tvaRateRow.style.display = "block";
         resTvaLine.style.display = "flex";
-        const rate = parseFloat(document.getElementById("tvaRate").value) || 19;
+        const rate = parseFloat(document.getElementById("tvaRate").value) || 21;
         tvaVal = baseOffer * (rate / 100);
         finalPrice = baseOffer + tvaVal;
         document.getElementById("resTvaLabel").textContent = `TVA (${rate}%):`;
@@ -741,18 +787,31 @@
         resTvaLine.style.display = "none";
       }
 
+      const unitPrice = finalPrice / qty;
+
+      // Update UI Rezultate
       document.getElementById("resTotalGrams").textContent = `${totalGrams} g`;
       document.getElementById("resTotalTime").textContent = `${h}h ${m}m`;
       document.getElementById("resProdCost").textContent = `${costProduction.toFixed(2)} ${config.currency}`;
+      document.getElementById("resLaborCost").textContent = `${laborCost.toFixed(2)} ${config.currency}`;
       document.getElementById("resBaseOffer").textContent = `${baseOffer.toFixed(2)} ${config.currency}`;
       document.getElementById("resTvaVal").textContent = `${tvaVal.toFixed(2)} ${config.currency}`;
+      document.getElementById("resUnitPrice").textContent = `${unitPrice.toFixed(2)} ${config.currency} / ${t.unitSuffix}`;
       document.getElementById("resFinalPrice").textContent = `${finalPrice.toFixed(2)} ${config.currency}`;
 
+      // Update Print Sheet Data
+      document.getElementById("pStudio").textContent = config.studioName || "";
+      document.getElementById("pContact").textContent = config.studioContact || "";
+      document.getElementById("pDate").textContent = new Date().toLocaleDateString(config.lang === "ro" ? "ro-RO" : "en-US");
+      
+      document.getElementById("pProject").textContent = projectName || "-";
+      document.getElementById("pQty").textContent = `${qty} ${t.unitSuffix}`;
       document.getElementById("pValPrinter").textContent = printerName;
       document.getElementById("pValMat").textContent = mat;
       document.getElementById("pValColors").textContent = colorsUsedList.length > 0 ? colorsUsedList.join(", ") : "-";
       document.getElementById("pValNet").textContent = `${baseOffer.toFixed(2)} ${config.currency}`;
-
+      document.getElementById("pValUnit").textContent = `${unitPrice.toFixed(2)} ${config.currency}`;
+      
       const pRowTva = document.getElementById("pRowTva");
       if (tvaActive) {
         pRowTva.style.display = "flex";
@@ -761,9 +820,106 @@
         pRowTva.style.display = "none";
       }
       document.getElementById("pValTotal").textContent = `${finalPrice.toFixed(2)} ${config.currency}`;
+
+      // Salvare date pentru istoric / whatsapp
+      lastCalcData = {
+        projectName, qty, printerName, matName: mat,
+        colors: colorsUsedList.join(", "),
+        totalGrams, totalHoursDecimal, costProduction, laborCost,
+        baseOffer, tvaVal, finalPrice, unitPrice, currency: config.currency,
+        tvaRate: parseFloat(document.getElementById("tvaRate").value) || 21, tvaActive
+      };
+    }
+
+    function updateHistoryBadge() {
+      const btn = document.getElementById("historyBtn");
+      if (!btn) return;
+      const t = I18N[config.lang];
+      btn.textContent = `${t.historyBtn} (${historyData.length})`;
+    }
+
+    function renderHistory() {
+      const t = I18N[config.lang];
+      const list = document.getElementById("historyList");
+      if (historyData.length === 0) {
+        list.innerHTML = `<p style="color:var(--muted);font-size:0.86rem;text-align:center;padding:10px;">${t.historyEmpty}</p>`;
+        return;
+      }
+      list.innerHTML = historyData.map(h => `
+        <div class="history-item">
+          <div class="history-info">
+            <div class="history-title">${h.projectName || (config.lang === "ro" ? "Fără nume" : "Untitled")}</div>
+            <div class="history-meta">${h.date} · ${h.qty} ${t.unitSuffix}</div>
+          </div>
+          <div class="history-price">${h.finalPrice.toFixed(2)} ${h.currency}</div>
+          <div class="history-btns">
+            <button class="btn-mini" onclick="loadQuote(${h.id})">${t.loadBtn}</button>
+            <button class="btn-mini btn-mini-del" onclick="deleteQuote(${h.id})">✕</button>
+          </div>
+        </div>`).join("");
+    }
+
+    function saveQuote() {
+      const t = I18N[config.lang];
+      if (!lastCalcData.finalPrice) return;
+      const entry = {
+        id: Date.now(),
+        date: new Date().toLocaleString(config.lang === "ro" ? "ro-RO" : "en-GB"),
+        ...lastCalcData
+      };
+      historyData.unshift(entry);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(historyData));
+      updateHistoryBadge();
+      showToast(t.toastSaved);
+      if (document.getElementById("historyPanel").style.display === "block") renderHistory();
+    }
+
+    function loadQuote(id) {
+      const h = historyData.find(x => x.id === id);
+      if (!h) return;
+      document.getElementById("projectName").value = h.projectName || "";
+      document.getElementById("projectQty").value = h.qty || 1;
+      document.getElementById("printerSelect").value = h.printerName;
+      document.getElementById("materialSelect").value = h.matName;
+      document.getElementById("printHours").value = Math.floor(h.totalHoursDecimal);
+      document.getElementById("printMinutes").value = Math.round((h.totalHoursDecimal % 1) * 60);
+      
+      document.getElementById("layersContainer").innerHTML = "";
+      layerCount = 0;
+      addLayer(0, "", ""); 
+      
+      toggleHistory();
+      calculate();
+    }
+
+    function deleteQuote(id) {
+      historyData = historyData.filter(x => x.id !== id);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(historyData));
+      updateHistoryBadge();
+      renderHistory();
+    }
+
+    function sendWhatsApp() {
+      const t = I18N[config.lang];
+      const d = lastCalcData;
+      const msg = `*${t.pTitle}*\n` +
+        `${t.pLblProject} ${d.projectName || "-"}\n` +
+        `${t.pLblQty} ${d.qty} ${t.unitSuffix}\n` +
+        `${t.pLblPrinter} ${d.printerName}\n` +
+        `${t.pLblMat} ${d.matName}\n` +
+        `${t.pLblColors} ${d.colors || "-"}\n` +
+        `${t.pLblNet} ${d.baseOffer.toFixed(2)} ${d.currency}\n` +
+        `${d.tvaActive ? `TVA (${d.tvaRate}%): ${d.tvaVal.toFixed(2)} ${d.currency}\n` : ""}` +
+        `${t.pLblUnit} ${d.unitPrice.toFixed(2)} ${d.currency}\n` +
+        `*${t.pLblTotal} ${d.finalPrice.toFixed(2)} ${d.currency}*`;
+      navigator.clipboard.writeText(msg).then(() => showToast(t.toastWa)).catch(() => {
+        prompt("Copiază oferta:", msg);
+      });
     }
 
     function resetForm() {
+      document.getElementById("projectName").value = "";
+      document.getElementById("projectQty").value = "1";
       document.getElementById("printHours").value = "";
       document.getElementById("printMinutes").value = "";
       document.getElementById("layersContainer").innerHTML = "";
@@ -773,11 +929,11 @@
     }
 
     function printQuote() {
-      document.getElementById("pDate").textContent = new Date().toLocaleDateString(config.lang === "ro" ? "ro-RO" : "en-US");
       window.print();
     }
 
     window.onload = init;
   </script>
+  
 </body>
 </html>
