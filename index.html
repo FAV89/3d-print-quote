@@ -371,17 +371,15 @@
     let layerCount = 0;
     let lastCalcData = {};
 
-    function init() {
-  populatePrinterSelect();
-  applyLanguage();
-  renderSettings();
-  updateHistoryBadge();
-  addLayer(0, "", "");
-  setTimeout(() => {
-    loadDraftState();
-    calculate();
-  }, 0);
-}
+     function init() {
+      populatePrinterSelect();
+      applyLanguage();
+      renderSettings();
+      updateHistoryBadge();
+      loadDraftState();
+      addLayer(0, "", "");
+    }
+
 
     function showToast(msg) {
       if (window.AndroidApp && typeof window.AndroidApp.showToast === "function") {
