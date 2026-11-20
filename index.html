@@ -170,7 +170,7 @@
       <div><label id="lblQty">Cantitate (buc.)</label><input type="number" id="projectQty" value="1" min="1" oninput="calculate()" /></div>
     </div>
     <div class="grid-2-pm">
-      <div><label id="lblPrinter">Imprimantă</label><select id="printerSelect" onchange="calculate()"></select></div>
+      <div><label id="lblPrinter">Imprimantă</label><select id="printerSelect" onchange="saveDraftState(); calculate();"></select></div>
       <div>
         <label id="lblMat">Material</label>
         <select id="materialSelect" onchange="calculate()">
@@ -372,14 +372,16 @@
     let lastCalcData = {};
 
     function init() {
-      populatePrinterSelect();
-      applyLanguage();
-      renderSettings();
-      updateHistoryBadge();
-      addLayer(0, "", "");
-      loadDraftState();
-      calculate();
-    }
+  populatePrinterSelect();
+  applyLanguage();
+  renderSettings();
+  updateHistoryBadge();
+  addLayer(0, "", "");
+  setTimeout(() => {
+    loadDraftState();
+    calculate();
+  }, 0);
+}
 
     function showToast(msg) {
       if (window.AndroidApp && typeof window.AndroidApp.showToast === "function") {
@@ -732,44 +734,46 @@
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draftState));
     }
 
-    function loadDraftState() {
-      try {
-        const raw = localStorage.getItem(DRAFT_KEY);
-        if (!raw) return;
-        const d = JSON.parse(raw);
+function loadDraftState() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
 
-        if (d.projectName !== undefined && document.getElementById("projectName")) {
-          document.getElementById("projectName").value = d.projectName;
-        }
-        if (d.qty !== undefined && document.getElementById("projectQty")) {
-          document.getElementById("projectQty").value = d.qty;
-        }
-        if (d.printer && document.getElementById("printerSelect")) {
-          const pSel = document.getElementById("printerSelect");
-          if ([...pSel.options].some(opt => opt.value === d.printer)) {
-            pSel.value = d.printer;
-          }
-        }
-        if (d.material && document.getElementById("materialSelect")) {
-          const mSel = document.getElementById("materialSelect");
-          if ([...mSel.options].some(opt => opt.value === d.material)) {
-            mSel.value = d.material;
-          }
-        }
-        if (d.hours !== undefined && document.getElementById("printHours")) {
-          document.getElementById("printHours").value = d.hours;
-        }
-        if (d.minutes !== undefined && document.getElementById("printMinutes")) {
-          document.getElementById("printMinutes").value = d.minutes;
-        }
-        if (d.tvaActive !== undefined && document.getElementById("tvaToggle")) {
-          document.getElementById("tvaToggle").checked = d.tvaActive;
-        }
-        if (d.tvaRate && document.getElementById("tvaRate")) {
-          document.getElementById("tvaRate").value = d.tvaRate;
-        }
-      } catch (e) {}
+    if (d.projectName !== undefined && document.getElementById("projectName")) {
+      document.getElementById("projectName").value = d.projectName;
     }
+    if (d.qty !== undefined && document.getElementById("projectQty")) {
+      document.getElementById("projectQty").value = d.qty;
+    }
+    if (d.printer && document.getElementById("printerSelect")) {
+      const pSel = document.getElementById("printerSelect");
+      const target = String(d.printer).trim();
+      const idx = [...pSel.options].findIndex(opt => opt.value.trim() === target);
+      if (idx >= 0) {
+        pSel.selectedIndex = idx;
+      }
+    }
+    if (d.material && document.getElementById("materialSelect")) {
+      const mSel = document.getElementById("materialSelect");
+      if ([...mSel.options].some(opt => opt.value === d.material)) {
+        mSel.value = d.material;
+      }
+    }
+    if (d.hours !== undefined && document.getElementById("printHours")) {
+      document.getElementById("printHours").value = d.hours;
+    }
+    if (d.minutes !== undefined && document.getElementById("printMinutes")) {
+      document.getElementById("printMinutes").value = d.minutes;
+    }
+    if (d.tvaActive !== undefined && document.getElementById("tvaToggle")) {
+      document.getElementById("tvaToggle").checked = d.tvaActive;
+    }
+    if (d.tvaRate && document.getElementById("tvaRate")) {
+      document.getElementById("tvaRate").value = d.tvaRate;
+    }
+  } catch (e) {}
+}
 
     function updateHistoryBadge() {
       const btn = document.getElementById("historyBtn");
